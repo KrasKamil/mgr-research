@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research - Kamil Kras · MGR AGH 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #ffffff;
+  --bg2: #f8f9fa;
+  --bg3: #f1f3f5;
+  --text: #212529;
+  --text2: #495057;
+  --text3: #868e96;
+  --blue: #1971c2;
+  --blue-bg: #e7f5ff;
+  --green: #2f9e44;
+  --green-bg: #ebfbee;
+  --orange: #e67700;
+  --orange-bg: #fff9db;
+  --red: #c92a2a;
+  --red-bg: #fff5f5;
+  --border: #dee2e6;
+  --border2: #e9ecef;
+}
+body { font-family: 'Inter', sans-serif; font-weight: 400; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; }
+.wrap { max-width: 780px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+
+/* HEADER */
+.header { margin-bottom: 3rem; }
+.header-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.header-title { font-size: 1.6rem; font-weight: 700; line-height: 1.25; color: var(--text); }
+.header-title span { color: var(--blue); }
+.header-pill { font-family: 'JetBrains Mono', monospace; font-size: 11px; background: var(--red-bg); color: var(--red); border: 1px solid #ffc9c9; padding: 4px 10px; border-radius: 4px; white-space: nowrap; font-weight: 500; }
+.header-meta { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; flex-wrap: wrap; }
+.meta-cell { padding: 6px 14px; font-size: 12px; color: var(--text2); border-right: 1px solid var(--border); }
+.meta-cell:last-child { border-right: none; }
+.meta-cell strong { color: var(--text); }
+
+/* SECTION */
+.section { margin-bottom: 2.75rem; }
+.sec-label { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+.sec-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500; background: var(--text); color: #fff; padding: 3px 8px; border-radius: 3px; letter-spacing: 0.05em; }
+.sec-title { font-size: 1.05rem; font-weight: 600; color: var(--text); }
+
+/* ALERT BOXES */
+.alert { padding: 0.85rem 1.1rem; border-radius: 6px; font-size: 13.5px; line-height: 1.6; margin-bottom: 0.75rem; }
+.alert-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+.alert-blue { background: var(--blue-bg); border-left: 3px solid var(--blue); }
+.alert-blue .alert-label { color: var(--blue); }
+.alert-green { background: var(--green-bg); border-left: 3px solid var(--green); }
+.alert-green .alert-label { color: var(--green); }
+.alert-orange { background: var(--orange-bg); border-left: 3px solid var(--orange); }
+.alert-orange .alert-label { color: var(--orange); }
+
+/* DATASET CARDS */
+.ds-list { display: flex; flex-direction: column; gap: 8px; }
+.ds-card { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.ds-card.primary { border-color: var(--blue); border-width: 2px; }
+.ds-row { display: grid; grid-template-columns: 160px 1fr 110px; gap: 0; align-items: stretch; }
+.ds-name { padding: 0.85rem 1rem; border-right: 1px solid var(--border2); background: var(--bg2); }
+.ds-name-title { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+.ds-name-sub { font-size: 12px; color: var(--text3); font-family: 'JetBrains Mono', monospace; }
+.ds-details { padding: 0.85rem 1rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem 1rem; align-content: center; }
+.ds-detail-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); font-family: 'JetBrains Mono', monospace; margin-bottom: 1px; }
+.ds-detail-val { font-size: 13px; color: var(--text); font-weight: 500; }
+.ds-badge-col { padding: 0.85rem 1rem; border-left: 1px solid var(--border2); display: flex; align-items: center; background: var(--bg2); }
+.ds-badge { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 600; white-space: nowrap; }
+.b-primary { background: var(--blue); color: #fff; }
+.b-ok { background: var(--green-bg); color: var(--green); border: 1px solid #b2f2bb; }
+.b-skip { background: var(--bg3); color: var(--text3); border: 1px solid var(--border); }
+.ds-note { padding: 0.6rem 1rem; background: var(--bg2); border-top: 1px solid var(--border2); font-size: 12.5px; color: var(--text2); }
+@media (max-width: 600px) {
+  .ds-row { grid-template-columns: 1fr; }
+  .ds-details { grid-template-columns: 1fr 1fr; }
+  .ds-badge-col { border-left: none; border-top: 1px solid var(--border2); }
+  .ds-name { border-right: none; border-bottom: 1px solid var(--border2); }
+}
+
+/* STRATEGY GRID */
+.strat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+@media (max-width: 500px) { .strat-grid { grid-template-columns: 1fr; } }
+.strat-card { border: 1px solid var(--border); border-radius: 6px; padding: 0.85rem 1rem; }
+.strat-icon { font-size: 18px; margin-bottom: 6px; }
+.strat-title { font-weight: 600; font-size: 13px; margin-bottom: 3px; }
+.strat-desc { font-size: 12.5px; color: var(--text2); line-height: 1.55; }
+.strat-desc code { font-family: 'JetBrains Mono', monospace; background: var(--bg3); padding: 1px 4px; border-radius: 3px; font-size: 11px; }
+
+/* MODELS */
+.models-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 0.75rem; }
+@media (max-width: 500px) { .models-row { grid-template-columns: 1fr; } }
+.model-card { border: 1px solid var(--border); border-radius: 6px; padding: 0.85rem 1rem; }
+.model-card.main { border-color: var(--blue); border-width: 2px; background: var(--blue-bg); }
+.model-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); margin-bottom: 4px; }
+.model-name { font-size: 15px; font-weight: 700; margin-bottom: 5px; }
+.model-card.main .model-name { color: var(--blue); }
+.model-desc { font-size: 12.5px; color: var(--text2); line-height: 1.5; }
+
+/* PAPERS */
+.papers-list { display: flex; flex-direction: column; }
+.paper-row { display: grid; grid-template-columns: 24px 1fr; gap: 0 12px; padding: 0.75rem 0; border-bottom: 1px solid var(--border2); }
+.paper-row:last-child { border-bottom: none; }
+.paper-idx { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text3); padding-top: 2px; }
+.paper-title { font-weight: 600; font-size: 13.5px; line-height: 1.4; margin-bottom: 2px; }
+.paper-meta { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+.paper-summary { font-size: 13px; color: var(--text2); line-height: 1.55; }
+.paper-summary strong { color: var(--text); }
+.paper-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10px; background: var(--blue-bg); color: var(--blue); padding: 2px 6px; border-radius: 3px; margin-top: 5px; font-weight: 500; }
+
+/* GAPS */
+.gap-card { border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; overflow: hidden; }
+.gap-header { padding: 0.85rem 1rem; background: var(--bg2); display: flex; align-items: flex-start; gap: 10px; }
+.gap-n { width: 24px; height: 24px; border-radius: 50%; background: var(--blue); color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.gap-head-text { flex: 1; }
+.gap-title { font-weight: 600; font-size: 13.5px; line-height: 1.4; }
+.gap-desc { padding: 0.75rem 1rem 0.75rem 2.9rem; font-size: 13px; color: var(--text2); line-height: 1.65; border-top: 1px solid var(--border2); }
+.gap-desc strong { color: var(--text); }
+.gap-question { display: inline-block; background: var(--orange-bg); color: var(--orange); font-size: 12px; font-weight: 500; padding: 3px 8px; border-radius: 4px; margin-top: 6px; border: 1px solid #ffe066; }
+
+/* STEPS */
+.steps-list { display: flex; flex-direction: column; gap: 6px; }
+.step-row { display: flex; gap: 12px; align-items: flex-start; padding: 0.75rem 1rem; border: 1px solid var(--border); border-radius: 6px; }
+.step-n { width: 26px; height: 26px; border-radius: 50%; background: var(--blue); color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.step-body { flex: 1; font-size: 13.5px; line-height: 1.55; }
+.step-body strong { color: var(--text); }
+.step-body span { color: var(--text2); }
+
+/* CONTACT BOX */
+.contact-box { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin-top: 0.75rem; }
+.contact-row { display: flex; align-items: center; gap: 12px; padding: 0.6rem 1rem; border-bottom: 1px solid var(--border2); font-size: 13px; }
+.contact-row:last-child { border-bottom: none; }
+.contact-role { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text3); width: 130px; flex-shrink: 0; }
+.contact-name { font-weight: 500; flex: 1; }
+.contact-email { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--blue); }
+
+/* FOOTER */
+.footer { margin-top: 3.5rem; padding-top: 1.25rem; border-top: 2px solid var(--text); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; }
+.footer-l { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text3); }
+.footer-r { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--red); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-top">
+    <div class="header-title">Predykcja zajętości miejsc parkingowych<br><span>z wykorzystaniem sieci LSTM</span><br><span style="font-size:1rem; font-weight:400; color:var(--text2);">Podsumowanie researchu wstępnego</span></div>
+    <div class="header-pill">⚠ Deadline: 15.09.2026</div>
+  </div>
+  <div class="header-meta">
+    <div class="meta-cell"><strong>Kamil Kras</strong> · nr alb. 415010</div>
+    <div class="meta-cell">Promotor: <strong>dr inż. Michał Grega</strong></div>
+    <div class="meta-cell">Teleinformatyka II stopień · AGH 2026</div>
+  </div>
+</div>
+
+<!-- 01 KONTEKST -->
+<div class="section">
+  <div class="sec-label"><div class="sec-tag">01</div><div class="sec-title">Punkt wyjścia - projekt inżynierski</div></div>
+  <p style="font-size:13.5px; color:var(--text2); margin-bottom:0.75rem;">Istniejący system (praca inżynierska) klasyfikuje miejsca parkingowe jako wolne/zajęte na podstawie obrazu z kamery IP - OpenCV z progowaniem adaptacyjnym + algorytm A* do wyznaczania trasy. Obsługa wielu parkingów przez konfigurację JSON.</p>
+  <div class="alert alert-orange">
+    <div class="alert-label">⚠ Problem zidentyfikowany na poprzednim spotkaniu</div>
+    Parking AGH ma trywialny wzorzec (zapełnienie 8–10, pustka po 16, wakacje = brak danych). Jako jedyne źródło danych nie stanowi wyzwania badawczego. <strong>Rozwiązanie: publiczne datasety z bogatszymi wzorcami + własne dane jako uzupełnienie.</strong>
+  </div>
+</div>
+
+<!-- 02 DATASETY -->
+<div class="section">
+  <div class="sec-label"><div class="sec-tag">02</div><div class="sec-title">Przegląd dostępnych datasetów</div></div>
+  <div class="alert alert-green" style="margin-bottom:1rem;">
+    <div class="alert-label">Kluczowy wniosek</div>
+    Do LSTM potrzebne są dane <strong>cykliczne</strong> - zdjęcia robione regularnie przez wiele tygodni. Jednorazowe snapshoty (ACPDS, CARPK, PS2.0) nie mają osi czasu i nie nadają się do predykcji.
+  </div>
+  <div class="ds-list">
+
+    <div class="ds-card primary">
+      <div class="ds-row">
+        <div class="ds-name">
+          <div class="ds-name-title">PKLot</div>
+          <div class="ds-name-sub">Almeida et al., 2015</div>
+        </div>
+        <div class="ds-details">
+          <div><div class="ds-detail-label">Interwał / czas</div><div class="ds-detail-val">co 5 min / 30+ dni</div></div>
+          <div><div class="ds-detail-label">Skala</div><div class="ds-detail-val">2 parkingi · 695 899 miejsc</div></div>
+          <div><div class="ds-detail-label">Dostęp</div><div class="ds-detail-val">Kaggle / CC BY 4.0</div></div>
+          <div><div class="ds-detail-label">Pogoda</div><div class="ds-detail-val">Słońce, chmury, deszcz</div></div>
+          <div><div class="ds-detail-label">Format</div><div class="ds-detail-val">JPEG 1280×720 + XML</div></div>
+        </div>
+        <div class="ds-badge-col"><span class="ds-badge b-primary">⭐ GŁÓWNY</span></div>
+      </div>
+      <div class="ds-note">5-minutowy interwał przez 30+ dni = idealne szeregi czasowe dla LSTM. Trzy różne parkingi o różnych wzorcach - rozwiązuje problem trywialności danych z AGH. Pobierz z Kaggle.</div>
+    </div>
+
+    <div class="ds-card">
+      <div class="ds-row">
+        <div class="ds-name">
+          <div class="ds-name-title">Gachon Univ. 2025</div>
+          <div class="ds-name-sub">Kim et al., Sensors</div>
+        </div>
+        <div class="ds-details">
+          <div><div class="ds-detail-label">Interwał / czas</div><div class="ds-detail-val">co 3–5 sek / 7 miesięcy</div></div>
+          <div><div class="ds-detail-label">Skala</div><div class="ds-detail-val">1 parking · 13 691 klatek</div></div>
+          <div><div class="ds-detail-label">Dostęp</div><div class="ds-detail-val">Kontakt z autorami</div></div>
+          <div><div class="ds-detail-label">Pogoda</div><div class="ds-detail-val">Noc, deszcz, pełny rok</div></div>
+          <div><div class="ds-detail-label">DOI</div><div class="ds-detail-val">10.3390/s25227009</div></div>
+        </div>
+        <div class="ds-badge-col"><span class="ds-badge b-primary">⭐ IDEALNY</span></div>
+      </div>
+      <div class="ds-note">7 miesięcy = pełna sezonowość. Kontakt: <strong>jscho@gachon.ac.kr</strong> (prof. Jinsoo Cho, corresponding author). Warto napisać - koreańscy badacze często odpowiadają na prośby akademickie.</div>
+    </div>
+
+    <div class="ds-card">
+      <div class="ds-row">
+        <div class="ds-name">
+          <div class="ds-name-title">CNRPark-EXT</div>
+          <div class="ds-name-sub">Amato et al., 2017</div>
+        </div>
+        <div class="ds-details">
+          <div><div class="ds-detail-label">Interwał / czas</div><div class="ds-detail-val">co 30 min / multi-sezon</div></div>
+          <div><div class="ds-detail-label">Skala</div><div class="ds-detail-val">9 kamer · 157 549 miejsc</div></div>
+          <div><div class="ds-detail-label">Dostęp</div><div class="ds-detail-val">cnrpark.it</div></div>
+        </div>
+        <div class="ds-badge-col"><span class="ds-badge b-ok">POMOCNICZO</span></div>
+      </div>
+      <div class="ds-note">30-min interwał = za duże aliasowanie dla LSTM. Przydatny do walidacji generalizacji modelu (inne kraje, inne wzorce).</div>
+    </div>
+
+    <div class="ds-card" style="opacity:0.55;">
+      <div class="ds-row">
+        <div class="ds-name">
+          <div class="ds-name-title">ACPDS / CARPK / PS2.0</div>
+          <div class="ds-name-sub">różni autorzy</div>
+        </div>
+        <div class="ds-details">
+          <div><div class="ds-detail-label">Interwał</div><div class="ds-detail-val">Brak osi czasu</div></div>
+          <div><div class="ds-detail-label">Typ</div><div class="ds-detail-val">Jednorazowe snapshoty</div></div>
+        </div>
+        <div class="ds-badge-col"><span class="ds-badge b-skip">POMIŃ</span></div>
+      </div>
+      <div class="ds-note">Statyczne zdjęcia bez ciągłości czasowej - nie nadają się do treningu LSTM. Brak sekwencji = brak możliwości BPTT.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 03 STRATEGIA -->
+<div class="section">
+  <div class="sec-label"><div class="sec-tag">03</div><div class="sec-title">Strategia zbierania i przetwarzania danych</div></div>
+  <div class="strat-grid">
+    <div class="strat-card">
+      <div class="strat-icon">⏱</div>
+      <div class="strat-title">Interwał próbkowania: 5 minut</div>
+      <div class="strat-desc">1 min = za dużo szumu optycznego (przejazd samochodu przez obraz). 30 min = aliasowanie, model nie widzi dynamiki. 5 min = optimum potwierdzone w literaturze.</div>
+    </div>
+    <div class="strat-card">
+      <div class="strat-icon">📅</div>
+      <div class="strat-title">Min. 4–8 tygodni danych</div>
+      <div class="strat-desc">Żeby LSTM nauczył się różnicy między wtorek a niedzielą. Idealnie 6+ miesięcy dla sezonowości. PKLot (30 dni) + własne dane = wystarczające.</div>
+    </div>
+    <div class="strat-card">
+      <div class="strat-icon">🌦</div>
+      <div class="strat-title">Cechy wejściowe</div>
+      <div class="strat-desc">Godzina (<code>sin/cos</code>, nie liczba!), dzień tygodnia, typ dnia (roboczy/święto), temperatura, opady. Jin et al. 2022: pogoda istotnie poprawia MAE.</div>
+    </div>
+    <div class="strat-card">
+      <div class="strat-icon">✂️</div>
+      <div class="strat-title">Podział chronologiczny</div>
+      <div class="strat-desc">Nigdy losowe tasowanie! Niszczy sekwencję. Podział: 70% trening → 15% walidacja → 15% test, w kolejności czasowej.</div>
+    </div>
+  </div>
+</div>
+
+<!-- 04 MODELE -->
+<div class="section">
+  <div class="sec-label"><div class="sec-tag">04</div><div class="sec-title">Modele do porównania</div></div>
+  <div class="models-row">
+    <div class="model-card">
+      <div class="model-tag">Punkt odniesienia</div>
+      <div class="model-name">Baseline naiwny</div>
+      <div class="model-desc">„Za N minut = teraz." Zaskakująco trudny do pobicia. Obowiązkowy punkt startowy każdego eksperymentu.</div>
+    </div>
+    <div class="model-card">
+      <div class="model-tag">Model klasyczny</div>
+      <div class="model-name">ARIMA</div>
+      <div class="model-desc">Lepszy dla horyzontów &lt;5 min (MAE=0.35, Avšar 2022). Dobry benchmark matematyczny przed siecią neuronową.</div>
+    </div>
+    <div class="model-card main">
+      <div class="model-tag">Główny model MGR</div>
+      <div class="model-name">LSTM</div>
+      <div class="model-desc">Dominuje dla horyzontów 15–60 min. Pamięta wzorce dzienne i tygodniowe przez mechanizm bramek.</div>
+    </div>
+  </div>
+  <p style="font-size:12.5px; color:var(--text3);">Opcjonalnie: GRU-LSTM (Zeng et al. 2022) lub hybrydowy ARIMA+LSTM+BPNN (MAE=0.47, Dahiya et al. 2025).</p>
+</div>
+
+<!-- 05 PUBLIKACJE -->
+<div class="section">
+  <div class="sec-label"><div class="sec-tag">05</div><div class="sec-title">Kluczowe publikacje</div></div>
+  <div class="papers-list">
+    <div class="paper-row">
+      <div class="paper-idx">01</div>
+      <div>
+        <div class="paper-title">LSTM vs ARIMA - bezpośrednie porównanie na danych parkingowych</div>
+        <div class="paper-meta">Avšar et al. · MANAS J. Engineering · 2022 · DOI: 10.51354/mjen.986631</div>
+        <div class="paper-summary"><strong>Wynik:</strong> ARIMA wygrywa dla horyzontów &lt;5 min (MAE=0.35), LSTM dominuje dla 15–60 min. Bezpośrednio uzasadnia wybór LSTM dla zakresu tej pracy.</div>
+        <span class="paper-tag">cytuj w: porównanie modeli</span>
+      </div>
+    </div>
+    <div class="paper-row">
+      <div class="paper-idx">02</div>
+      <div>
+        <div class="paper-title">Weather-integrated LSTM dla parkingów w mieście</div>
+        <div class="paper-meta">Jin, Zhao, Ni · Applied Sciences · 2022 · DOI: 10.3390/app122111046</div>
+        <div class="paper-summary"><strong>Wynik:</strong> LSTM z pogodą osiąga MAE=5.37 dla 10 min, znacznie bijąc wersję bez pogody. Uzasadnia dodanie danych meteorologicznych jako cechy wejściowej.</div>
+        <span class="paper-tag">cytuj w: cechy wejściowe</span>
+      </div>
+    </div>
+    <div class="paper-row">
+      <div class="paper-idx">03</div>
+      <div>
+        <div class="paper-title">Stacked GRU-LSTM z wieloma cechami wejściowymi</div>
+        <div class="paper-meta">Zeng, Ma, Wang, Cui · IEEE Access · 2022 · DOI: 10.1109/ACCESS.2022.3168285</div>
+        <div class="paper-summary"><strong>Wynik:</strong> GRU + podwójny LSTM - niższy RMSE od samego LSTM przy krótszym czasie treningu. Alternatywna architektura do rozważenia.</div>
+        <span class="paper-tag">cytuj w: architektura sieci</span>
+      </div>
+    </div>
+    <div class="paper-row">
+      <div class="paper-idx">04</div>
+      <div>
+        <div class="paper-title">CNN + LSTM end-to-end z obrazu kamery</div>
+        <div class="paper-meta">Xu, Tang, Ma, Zhang · IEEE Access · 2024 · DOI: 10.1109/ACCESS.2024.3368521</div>
+        <div class="paper-summary"><strong>Wynik:</strong> CNN ekstrahuje cechy przestrzenne → LSTM przetwarza w czasie. Bezpośrednie rozszerzenie istniejącego systemu wizyjnego.</div>
+        <span class="paper-tag">inspiracja: rozszerzenie systemu</span>
+      </div>
+    </div>
+    <div class="paper-row">
+      <div class="paper-idx">05</div>
+      <div>
+        <div class="paper-title">Hybrid ARIMA + LSTM + BPNN</div>
+        <div class="paper-meta">Dahiya et al. · PeerJ Computer Science · 2025 · DOI: 10.7717/peerj-cs.2645</div>
+        <div class="paper-summary"><strong>Wynik:</strong> MAE=0.47 - najlepszy wynik w zestawieniu. ARIMA i LSTM równolegle, BPNN jako arbiter. Możliwe rozszerzenie pracy.</div>
+        <span class="paper-tag">opcjonalne rozszerzenie</span>
+      </div>
+    </div>
+    <div class="paper-row">
+      <div class="paper-idx">06</div>
+      <div>
+        <div class="paper-title">Real-Time Parking na Low-Power Embedded Platform</div>
+        <div class="paper-meta">Kim et al. · Sensors (MDPI) · 2025 · DOI: 10.3390/s25227009</div>
+        <div class="paper-summary"><strong>Wynik:</strong> YOLOv8 + temporal smoothing, 7 miesięcy danych, IP kamery - architekturalnie najbliższy proponowanemu systemowi. Dataset dostępny na prośbę.</div>
+        <span class="paper-tag">źródło datasetu Gachon</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 06 WKŁAD NAUKOWY -->
+<div class="section">
+  <div class="sec-label"><div class="sec-tag">06</div><div class="sec-title">Proponowany wkład naukowy - do omówienia</div></div>
+  <p style="font-size:13px; color:var(--text2); margin-bottom:0.9rem;">Na podstawie przeglądu literatury zidentyfikowano trzy luki badawcze. Proszę o wskazanie kierunku który jest najbardziej wartościowy z punktu widzenia promotora.</p>
+
+  <div class="gap-card">
+    <div class="gap-header">
+      <div class="gap-n">1</div>
+      <div class="gap-head-text">
+        <div class="gap-title">Wpływ szumu klasyfikatora wizyjnego na dokładność LSTM</div>
+      </div>
+    </div>
+    <div class="gap-desc">
+      Literatura zakłada że dane historyczne są obiektywnie prawdziwe. W systemie opartym na OpenCV z progowaniem adaptacyjnym pojawiają się fałszywe wykrycia - cień drzewa jako samochód, okluzja pieszego, zmiany oświetlenia. Błędy te trafiają bezpośrednio do sekwencji czasowej i LSTM je "zapamiętuje".
+      <br><br>
+      <strong>Pytanie badawcze:</strong> Jak szum klasyfikatora wizyjnego degraduje MAE predykcji? Czy filtr (np. Kalmana) między OpenCV a LSTM poprawia wyniki?
+      <div class="gap-question">🔬 Unikalna synergia - OpenCV + LSTM w jednym pipeline</div>
+    </div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gap-header">
+      <div class="gap-n">2</div>
+      <div class="gap-head-text">
+        <div class="gap-title">Transfer Learning - minimalna ilość danych lokalnych</div>
+      </div>
+    </div>
+    <div class="gap-desc">
+      Nowy parking = brak danych historycznych = LSTM nie działa przez 4–8 tygodni. Literatura opisuje transfer learning koncepcyjnie ale nie kwantyfikuje ile danych z nowej lokalizacji faktycznie potrzeba po pre-treningu na PKLot.
+      <br><br>
+      <strong>Pytanie badawcze:</strong> Pre-trening na PKLot, fine-tuning na N dniach danych z AGH. Jak dokładność zależy od N? (3 dni vs 7 vs 14 vs 30)
+      <div class="gap-question">📊 Konkretne wykresy: dokładność vs. liczba dni danych lokalnych</div>
+    </div>
+  </div>
+
+  <div class="gap-card">
+    <div class="gap-header">
+      <div class="gap-n">3</div>
+      <div class="gap-head-text">
+        <div class="gap-title">Asymetryczna funkcja kosztu dla routingu A*</div>
+      </div>
+    </div>
+    <div class="gap-desc">
+      Standardowe metryki MAE/MSE traktują symetrycznie: "przewidziałem wolne, było zajęte" = "przewidziałem zajęte, było wolne". W kontekście A* routing te błędy mają różne konsekwencje - fałszywe "wolne" kieruje kierowcę do zajętego miejsca.
+      <br><br>
+      <strong>Pytanie badawcze:</strong> Czy pesymistyczny LSTM (asymetryczna funkcja kosztu, silnie penalizuje fałszywe "wolne") poprawia użyteczność routingu nawet kosztem wyższego MAE?
+      <div class="gap-question">🔗 Łączy A* z inżynierki z LSTM - unikalne połączenie</div>
+    </div>
+  </div>
+</div>
+
+<!-- 07 KROKI -->
+<div class="section">
+  <div class="sec-label"><div class="sec-tag">07</div><div class="sec-title">Kolejne kroki</div></div>
+  <div class="steps-list">
+    <div class="step-row">
+      <div class="step-n">1</div>
+      <div class="step-body"><strong>Pobranie PKLot z Kaggle</strong> <span>- analiza struktury XML, budowa szeregów czasowych (timestamp → % zajętości), pierwsze testy baseline naiwnego.</span></div>
+    </div>
+    <div class="step-row">
+      <div class="step-n">2</div>
+      <div class="step-body"><strong>Kontakt z prof. Jinsoo Cho</strong> <span>- prośba o dataset Gachon 2025 (7 miesięcy). Adres: jscho@gachon.ac.kr</span></div>
+    </div>
+    <div class="step-row">
+      <div class="step-n">3</div>
+      <div class="step-body"><strong>Moduł logowania w istniejącym systemie</strong> <span>- zapis zajętości co 5 minut do CSV/SQLite. Własne dane z kamery jako uzupełnienie datasetów.</span></div>
+    </div>
+    <div class="step-row">
+      <div class="step-n">4</div>
+      <div class="step-body"><strong>Uzgodnienie kierunku wkładu naukowego</strong> <span>- który z 3 zaproponowanych (sekcja 06) wyznacza zakres i tytuł do zgłoszenia przed 15.09.2026.</span></div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-l">Kamil Kras · nr alb. 415010 · Teleinformatyka II stopień · AGH 2026</div>
+  <div class="footer-r">Deadline zgłoszenia tematu: 15.09.2026</div>
+</footer>
+
+</div>
+</body>
+</html>
