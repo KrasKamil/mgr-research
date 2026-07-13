@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magisterka - Progress & Pipeline</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --surface-color: rgba(30, 41, 59, 0.7);
+            --primary-color: #3b82f6;
+            --accent-color: #10b981;
+            --danger-color: #ef4444;
+            --warning-color: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --glow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px;
+            background-image: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 25%),
+                              radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.15), transparent 25%);
+            background-attachment: fixed;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; }
+        h1, h2, h3 { font-weight: 700; margin-bottom: 1rem; }
+        h1 {
+            text-align: center; font-size: 2.5rem; margin-bottom: 2rem;
+            background: linear-gradient(to right, #60a5fa, #34d399);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .card {
+            background: var(--surface-color);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover { transform: translateY(-2px); box-shadow: var(--glow); }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        /* Sync Panel */
+        .sync-panel { background: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--primary-color); padding: 16px; border-radius: 8px; margin-bottom: 20px; }
+        .sync-input { width: 100%; background: #0f172a; color: #fff; border: 1px solid var(--border-color); padding: 8px; border-radius: 6px; margin-top: 8px; font-family: monospace; font-size: 0.8rem; }
+        .sync-btns { display: flex; gap: 10px; margin-top: 10px; }
+
+        /* Schedule */
+        .schedule-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; }
+        .schedule-item { background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 12px; border-left: 4px solid var(--primary-color); }
+        .schedule-item:nth-child(2) { border-left-color: #8b5cf6; }
+        .schedule-item:nth-child(3) { border-left-color: #f59e0b; }
+        .schedule-item:nth-child(4) { border-left-color: var(--accent-color); }
+        .date { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; display: block; }
+        .task { font-size: 1.1rem; font-weight: 600; }
+
+        /* Reminders Panel */
+        .reminder-list { list-style: none; }
+        .reminder-list li {
+            background: rgba(15, 23, 42, 0.5); padding: 12px; border-radius: 8px; margin-bottom: 10px;
+            display: flex; align-items: flex-start; gap: 12px; border: 1px solid var(--border-color);
+        }
+        .reminder-list li.urgent { border-left: 4px solid var(--danger-color); }
+        .reminder-list li.warning { border-left: 4px solid var(--warning-color); }
+        .reminder-list li.info { border-left: 4px solid var(--primary-color); }
+
+        /* Weekends Plan */
+        .weekend-plan { margin-bottom: 16px; }
+        .weekend-title { font-weight: 600; color: var(--accent-color); margin-bottom: 4px; }
+        .weekend-tasks { padding-left: 20px; font-size: 0.95rem; color: #cbd5e1; }
+        .weekend-tasks li { margin-bottom: 4px; }
+
+        /* Pipeline Styles */
+        .pipeline-step { margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; }
+        .pipeline-step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .step-header { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .step-number { background: var(--primary-color); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; flex-shrink: 0; }
+        .step-title { font-size: 1.1rem; font-weight: 600; flex-grow: 1; }
+        .step-details { margin-top: 12px; margin-left: 44px; font-size: 0.95rem; color: var(--text-muted); }
+        .sub-steps { margin-top: 8px; list-style-type: none; }
+        .sub-steps li { position: relative; padding-left: 20px; margin-bottom: 6px; }
+        .sub-steps li::before { content: "•"; position: absolute; left: 0; color: var(--primary-color); }
+
+        /* Inputs & Buttons */
+        .notes-area { width: 100%; min-height: 120px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; color: var(--text-main); font-family: inherit; resize: vertical; margin-top: 12px; }
+        .notes-area:focus { outline: none; border-color: var(--primary-color); }
+        
+        button {
+            background: var(--primary-color); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.3s ease;
+        }
+        button:hover { background: #2563eb; }
+        button.alt { background: var(--surface-color); border: 1px solid var(--border-color); }
+        button.alt:hover { background: rgba(255,255,255,0.1); }
+
+        .checkbox-wrapper { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+        input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent-color); cursor: pointer; }
+        .checked .step-title { text-decoration: line-through; color: var(--text-muted); }
+        .checked .step-number { background: var(--accent-color); }
+        
+        .toast {
+            position: fixed; bottom: 20px; right: 20px; background: var(--accent-color); color: white; padding: 12px 24px; border-radius: 8px; font-weight: bold; opacity: 0; transition: opacity 0.3s; pointer-events: none;
+        }
+        .toast.show { opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>MGR Dashboard 🚀</h1>
+
+        <!-- Sync Panel -->
+        <div class="card sync-panel">
+            <h3>☁️ Synchronizacja między urządzeniami</h3>
+            <p style="font-size: 0.85rem; color: #cbd5e1;">GitHub Pages nie ma bazy danych. Aby przenieść notatki z komputera na telefon: na komputerze kliknij "Eksportuj" -> skopiuj kod -> wyślij go sobie -> na telefonie wklej go tutaj i kliknij "Importuj".</p>
+            <input type="text" id="sync-code" class="sync-input" placeholder="Tu wklej kod z innego urządzenia..." onclick="this.select()">
+            <div class="sync-btns">
+                <button onclick="exportData()">📤 Eksportuj notatki (Kopiuj kod)</button>
+                <button class="alt" onclick="importData()">📥 Importuj notatki (Wczytaj z kodu)</button>
+            </div>
+        </div>
+
+        <!-- Ważne Informacje i Przypominajki -->
+        <div class="grid-2">
+            <div class="card">
+                <h2>🔔 Przypominajki / Akcje</h2>
+                <ul class="reminder-list">
+                    <li class="urgent">
+                        <input type="checkbox" id="rem-1" onchange="saveCheck('rem-1')">
+                        <div>
+                            <strong>Zgłoszenie tematu przez promotora!</strong><br>
+                            <span style="font-size: 0.85rem; color: #94a3b8;">Temat zatwierdzony, ale systemowo dr Grega musi go zgłosić. Przypomnieć mu o tym na najbliższym spotkaniu/mailowo.</span>
+                        </div>
+                    </li>
+                    <li class="warning">
+                        <input type="checkbox" id="rem-2" onchange="saveCheck('rem-2')">
+                        <div>
+                            <strong>Koreańczycy (Gachon Data)</strong><br>
+                            <span style="font-size: 0.85rem; color: #94a3b8;">Wysłano follow-up z pytaniem o datę dostarczenia. Sprawdzać maila.</span>
+                        </div>
+                    </li>
+                    <li class="info">
+                        <input type="checkbox" id="rem-3" onchange="saveCheck('rem-3')">
+                        <div>
+                            <strong>Możliwy Recenzent</strong><br>
+                            <span style="font-size: 0.85rem; color: #94a3b8;">Dr Leszczuk (samodzielny pracownik). Warto mieć to z tyłu głowy pisząc tekst.</span>
+                        </div>
+                    </li>
+                    <li class="info">
+                        <input type="checkbox" id="rem-4" onchange="saveCheck('rem-4')">
+                        <div>
+                            <strong>Oświadczenie AI</strong><br>
+                            <span style="font-size: 0.85rem; color: #94a3b8;">Pamiętać by w pracy zawrzeć sekcję o wykorzystaniu AI (tylko do kodu i korekty, NIE do pisania twórczego).</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Plan na najbliższe weekendy -->
+            <div class="card">
+                <h2>🎯 Plan na najbliższe weekendy</h2>
+                <div class="weekend-plan">
+                    <div class="weekend-title">Weekend 1: Analiza Literatury</div>
+                    <ul class="weekend-tasks">
+                        <li>Przeszukać IEEE / Google Scholar (przez bibliotekę AGH).</li>
+                        <li>Znaleźć artykuł przeglądowy.</li>
+                        <li>Wybrać 3 prace z ostatnich 3-4 lat: spisać jakich danych/metod użyli i wyniki.</li>
+                        <li>Zrobić notatki paragrafowe (co opiszę w rozdziale teoretycznym).</li>
+                    </ul>
+                </div>
+                <div class="weekend-plan">
+                    <div class="weekend-title">Weekend 2: Setup i Dane (PKLot)</div>
+                    <ul class="weekend-tasks">
+                        <li>Stworzyć repozytorium kodu.</li>
+                        <li>Przygotować powtarzalny skrypt (pobieranie/parsowanie XML).</li>
+                        <li>Stworzyć gotowy plik CSV (Timestamp vs Zajętość).</li>
+                    </ul>
+                </div>
+                <div class="weekend-plan">
+                    <div class="weekend-title">Weekend 3: Baseline i Klasyka</div>
+                    <ul class="weekend-tasks">
+                        <li>Opracować Naiwny Baseline (Zajętość teraz = Zajętość za X min).</li>
+                        <li>Skonfigurować prostą ARIMĘ i wyciągnąć pierwsze wyniki (MAE).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Harmonogram -->
+        <div class="card">
+            <h2>📅 Harmonogram Ostateczny</h2>
+            <div class="schedule-grid">
+                <div class="schedule-item">
+                    <span class="date">28 Lutego</span>
+                    <span class="task">Początek badań</span>
+                </div>
+                <div class="schedule-item">
+                    <span class="date">30 Kwietnia</span>
+                    <span class="task">Koniec eksperymentów</span>
+                </div>
+                <div class="schedule-item">
+                    <span class="date">31 Maja</span>
+                    <span class="task">Gotowy tekst</span>
+                </div>
+                <div class="schedule-item">
+                    <span class="date">30 Czerwca</span>
+                    <span class="task">Gotowa praca</span>
+                    <span class="date" style="margin-top: 5px;">(10 Września ew. obrona)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notatki ogólne ze spotkań -->
+        <div class="card">
+            <h2>📝 Notatki / Brudnopis</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Piszesz tu np. opisy 3 wybranych artykułów. Zapisuje się samo.</p>
+            <textarea id="general-notes" class="notes-area" placeholder="Artykuł 1 (Autor, Rok): Użyli modelu X na datasecie Y. Wynik MAE = Z. Wnioski..."></textarea>
+        </div>
+
+        <!-- Baza Literatury -->
+        <div class="card">
+            <h2>📚 Baza Literatury i Dokumenty</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Zapisuj tu najważniejsze znalezione artykuły. (Link, tytuł, główne wnioski)</p>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="font-weight: 600; font-size: 0.9rem; color: var(--accent-color);">📖 Artykuł Przeglądowy (Review):</label>
+                <textarea id="lit-review" class="notes-area" placeholder="Tytuł / Link / Rok: ..." style="min-height: 70px; margin-top: 4px;"></textarea>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="font-weight: 600; font-size: 0.9rem; color: #60a5fa;">📄 Kluczowa publikacja (Metoda / Architektura):</label>
+                <textarea id="lit-main" class="notes-area" placeholder="Tytuł / Link / Rok: ..." style="min-height: 70px; margin-top: 4px;"></textarea>
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <label style="font-weight: 600; font-size: 0.9rem; color: #8b5cf6;">📄 Ważna publikacja (Dane / PKLot):</label>
+                <textarea id="lit-data" class="notes-area" placeholder="Tytuł / Link / Rok: ..." style="min-height: 70px; margin-top: 4px;"></textarea>
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <label style="font-weight: 600; font-size: 0.9rem; color: var(--warning-color);">📑 Inne / Linki do dokumentów (Katalog uczelni, wytyczne pracy):</label>
+                <textarea id="lit-other" class="notes-area" placeholder="Link do wytycznych pisania pracy na AGH, dodatkowe linki IEEE..." style="min-height: 90px; margin-top: 4px;"></textarea>
+            </div>
+        </div>
+
+        <!-- Deep Pipeline -->
+        <div class="card">
+            <h2>🧠 Deep Pipeline ML (Krok po kroku)</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
+                Odblokowuj poszczególne kroki od zera do własnego modelu ML.
+            </p>
+            <div id="pipeline-container"></div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Skopiowano kod do schowka!</div>
+
+    <script>
+        const pipelineSteps = [
+            {
+                id: 'step-0', title: 'Research i Baza Wiedzy', details: 'Fundament pracy magisterskiej.',
+                substeps: ['Znalezienie artykułu przeglądowego.', 'Wybranie 3 głównych publikacji referencyjnych.', 'Przygotowanie notatek z literatury do rozdziału 2.']
+            },
+            {
+                id: 'step-1', title: 'Pozyskanie danych (Data Ingestion)', details: 'Zrozumienie, z czym w ogóle pracujemy.',
+                substeps: ['Pobranie PKLot z Kaggle.', 'Przeanalizowanie struktury folderów.', 'Odkrycie jak czytać pliki XML.']
+            },
+            {
+                id: 'step-2', title: 'Budowa Szeregów Czasowych (Time-Series)', details: 'Modele jedzą liczby w czasie.',
+                substeps: ['Napisanie pętli w Pythonie idącej po XML-ach.', 'Zliczenie % zajętości parkingu.', 'Zapisanie do .csv (Timestamp, Occupancy, Camera_ID).']
+            },
+            {
+                id: 'step-3', title: 'Inżynieria Cech & Preprocessing', details: 'Przygotowanie papki dla sieci neuronowej.',
+                substeps: ['Normalizacja (Min-Max Scaler).', 'Kodowanie czasu (sinus/cosinus doby).', 'Rozdzielenie chronologiczne: 70% Trening, 15% Val, 15% Test.']
+            },
+            {
+                id: 'step-4', title: 'Naiwny Baseline', details: 'Z czym walczymy?',
+                substeps: ['Założenie: "za 15 min = teraz".', 'Obliczenie błędu MAE, RMSE. To jest punkt odniesienia.']
+            },
+            {
+                id: 'step-5', title: 'ARIMA (Klasyczny Benchmark)', details: 'Stara dobra statystyka.',
+                substeps: ['Zbadanie stacjonarności (Dickey-Fuller).', 'Trening modelu ARIMA.', 'Porównanie z Baseline.']
+            },
+            {
+                id: 'step-6', title: 'Data Windowing', details: 'Formatowanie X i Y dla LSTM.',
+                substeps: ['Mechanizm przesuwanego okna (Sliding Window).', 'X: Historia (np. 2h). Y: Przyszłość (15, 30, 60 min).']
+            },
+            {
+                id: 'step-7', title: 'Główne Danie: LSTM', details: 'Budowa i trening głównego modelu.',
+                substeps: ['Architektura w PyTorch/Keras.', 'Pętla treningowa z Early Stopping (POWTARZALNA!).']
+            },
+            {
+                id: 'step-8', title: 'Model Alternatywny: GRU', details: 'Lżejszy brat LSTM.',
+                substeps: ['Zmiana warstw na GRU.', 'Porównanie dokładności i czasu uczenia.']
+            },
+            {
+                id: 'step-9', title: 'Analiza Wyników', details: 'Dowody do pracy magisterskiej.',
+                substeps: ['Ostateczne MAE i RMSE dla 15, 30, 60 min.', 'Wykresy Predykcja vs Prawda.', 'Tabela zbiorcza wszystkich 4 modeli.']
+            },
+            {
+                id: 'step-10', title: 'Boss Końcowy: Generalizacja (Gachon)', details: 'Test na innych danych.',
+                substeps: ['Test modelu (bez douczania) na danych z Korei.', 'Dyskusja w pracy dlaczego wyniki spadły/wzrosły.']
+            }
+        ];
+
+        const container = document.getElementById('pipeline-container');
+
+        // Render pipeline
+        pipelineSteps.forEach((step, index) => {
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'pipeline-step';
+            stepDiv.id = `container-${step.id}`;
+
+            let substepsHtml = step.substeps.map(s => `<li>${s}</li>`).join('');
+
+            stepDiv.innerHTML = `
+                <div class="step-header">
+                    <input type="checkbox" id="${step.id}" onchange="toggleStep('${step.id}')">
+                    <div class="step-number">${index + 1}</div>
+                    <label class="step-title" for="${step.id}">${step.title}</label>
+                </div>
+                <div class="step-details">
+                    <p><em>${step.details}</em></p>
+                    <ul class="sub-steps">${substepsHtml}</ul>
+                    <textarea id="notes-${step.id}" class="notes-area" placeholder="Notatki do tego kroku..." style="min-height: 60px; margin-top:8px;"></textarea>
+                </div>
+            `;
+            container.appendChild(stepDiv);
+        });
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        // Local Storage Logic
+        function toggleStep(id) {
+            const isChecked = document.getElementById(id).checked;
+            document.getElementById(`container-${id}`).classList.toggle('checked', isChecked);
+            localStorage.setItem(`mgr_check_${id}`, isChecked);
+        }
+
+        function saveCheck(id) {
+            localStorage.setItem(`mgr_check_${id}`, document.getElementById(id).checked);
+        }
+
+        // Auto-save setup
+        function autoSaveSetup(id, prefix) {
+            let timeout;
+            const element = document.getElementById(id);
+            if(!element) return;
+            element.addEventListener('input', () => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    localStorage.setItem(`${prefix}_${id}`, element.value);
+                }, 500);
+            });
+        }
+
+        // Sync Features
+        function exportData() {
+            const data = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('mgr_')) {
+                    data[key] = localStorage.getItem(key);
+                }
+            }
+            const base64 = btoa(encodeURIComponent(JSON.stringify(data)));
+            const input = document.getElementById('sync-code');
+            input.value = base64;
+            input.select();
+            document.execCommand('copy');
+            showToast('Kod skopiowany! Wyślij go na drugi telefon/komputer.');
+        }
+
+        function importData() {
+            const input = document.getElementById('sync-code').value.trim();
+            if(!input) { alert('Najpierw wklej kod!'); return; }
+            try {
+                const data = JSON.parse(decodeURIComponent(atob(input)));
+                for (const key in data) {
+                    if (key.startsWith('mgr_')) {
+                        localStorage.setItem(key, data[key]);
+                    }
+                }
+                showToast('Notatki wczytane pomyślnie! Odświeżanie...');
+                setTimeout(() => window.location.reload(), 1000);
+            } catch (e) {
+                alert('Błędny kod! Upewnij się, że skopiowałeś całość.');
+            }
+        }
+
+        // Load data on start
+        window.onload = () => {
+            // General & Literature
+            const textAreas = ['general-notes', 'lit-review', 'lit-main', 'lit-data', 'lit-other'];
+            textAreas.forEach(id => {
+                const val = localStorage.getItem(`mgr_text_${id}`);
+                if(val && document.getElementById(id)) {
+                    document.getElementById(id).value = val;
+                }
+                autoSaveSetup(id, 'mgr_text');
+            });
+
+            // Reminders
+            ['rem-1', 'rem-2', 'rem-3', 'rem-4'].forEach(id => {
+                if(localStorage.getItem(`mgr_check_${id}`) === 'true') {
+                    document.getElementById(id).checked = true;
+                }
+            });
+
+            // Pipeline notes & checkboxes
+            pipelineSteps.forEach(step => {
+                const isChecked = localStorage.getItem(`mgr_check_${step.id}`) === 'true';
+                if(isChecked) {
+                    document.getElementById(step.id).checked = true;
+                    document.getElementById(`container-${step.id}`).classList.add('checked');
+                }
+
+                const noteContent = localStorage.getItem(`mgr_text_notes-${step.id}`);
+                if(noteContent) {
+                    document.getElementById(`notes-${step.id}`).value = noteContent;
+                }
+                
+                autoSaveSetup(`notes-${step.id}`, 'mgr_text');
+            });
+        }
+    </script>
+</body>
+</html>
