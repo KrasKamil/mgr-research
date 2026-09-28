@@ -1,447 +1,515 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Magisterka - Progress & Pipeline</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #0f172a;
-            --surface-color: rgba(30, 41, 59, 0.7);
-            --primary-color: #3b82f6;
-            --accent-color: #10b981;
-            --danger-color: #ef4444;
-            --warning-color: #f59e0b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.1);
-            --glow: 0 0 20px rgba(59, 130, 246, 0.5);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Praca magisterska — panel projektu</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e1116;--panel:#161b22;--panel2:#1c232d;--line:#2a323e;--tx:#e6e9ee;--mu:#8b95a5;--ok:#34d399;--bad:#f87171;--warn:#fbbf24;--info:#60a5fa}
+*{box-sizing:border-box;margin:0;padding:0;min-width:0}
+html,body{overflow-x:hidden}
+body{font:15px/1.6 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--tx)}
+.wrap{max-width:980px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:1.5rem;font-weight:700;margin-bottom:12px}
+h2{font-size:1.25rem;font-weight:700;margin-bottom:12px}
+h3{font-size:1rem;font-weight:600;margin-bottom:8px}
+.muted{color:var(--mu);font-size:.88rem}
+a{color:var(--info);text-decoration:none}
+a:hover{text-decoration:underline}
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+/* Nagłówek / temat pracy */
+.thesis-box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:16px}
+.thesis-title{font-weight:700;font-size:1.05rem;margin-bottom:10px}
+.thesis-title-en{font-weight:600;color:#cbd5e1;margin-bottom:10px}
+.meta-row{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.85rem;color:var(--mu);margin-top:6px}
+.meta-row b{color:var(--tx)}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-            padding: 20px;
-            background-image: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 25%),
-                              radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.15), transparent 25%);
-            background-attachment: fixed;
-        }
 
-        .container { max-width: 900px; margin: 0 auto; }
-        h1, h2, h3 { font-weight: 700; margin-bottom: 1rem; }
-        h1 {
-            text-align: center; font-size: 2.5rem; margin-bottom: 2rem;
-            background: linear-gradient(to right, #60a5fa, #34d399);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
+/* Zakładki */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;padding-top:6px;margin-bottom:22px}
+.tab{background:none;border:0;color:var(--mu);padding:12px 20px;border-bottom:3px solid transparent;font:inherit;font-weight:600;cursor:pointer;white-space:nowrap;border-radius:8px 8px 0 0}
+.tab:hover{color:var(--tx)}
+.tab[aria-selected=true]{color:var(--tx);border-bottom-color:var(--acc,var(--info))}
+.tab:focus-visible,button:focus-visible,summary:focus-visible,.lit-item:focus-visible{outline:2px solid var(--info);outline-offset:2px}
+.panel{display:none}
+.panel.on{display:block}
 
-        .card {
-            background: var(--surface-color);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .card:hover { transform: translateY(-2px); box-shadow: var(--glow); }
+/* Karty i grid */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid .card{margin-bottom:0}
+@media(max-width:760px){.grid{grid-template-columns:1fr}}
 
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+/* Źródło / linki */
+.src{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:16px}
+.src strong{display:block;margin:2px 0}
+.src em{color:var(--mu);font-style:normal;font-size:.9rem}
+.link-btn{display:inline-block;margin-top:10px;padding:6px 12px;background:color-mix(in srgb,var(--info) 15%,transparent);border:1px solid var(--info);border-radius:6px;font-size:.85rem;font-weight:600}
 
-        /* Sync Panel */
-        .sync-panel { background: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--primary-color); padding: 16px; border-radius: 8px; margin-bottom: 20px; }
-        .sync-input { width: 100%; background: #0f172a; color: #fff; border: 1px solid var(--border-color); padding: 8px; border-radius: 6px; margin-top: 8px; font-family: monospace; font-size: 0.8rem; }
-        .sync-btns { display: flex; gap: 10px; margin-top: 10px; }
+.key{border-left:4px solid var(--acc,var(--info));background:color-mix(in srgb,var(--acc,var(--info)) 10%,transparent);padding:14px 16px;border-radius:0 8px 8px 0;font-size:1.05rem;font-weight:600;margin:16px 0}
+.facts{list-style:none;margin-bottom:16px}
+.facts li{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+.facts li:last-child{border-bottom:0}
+.facts li>div:last-child{flex:1;min-width:0;overflow-wrap:break-word;word-break:break-word}
+.lbl{font-weight:600;min-width:150px;flex-shrink:0;color:var(--mu)}
+@media(max-width:520px){.facts li{flex-direction:column;gap:2px}.lbl{min-width:0}}
+.chip{display:inline-block;border:1px solid var(--acc,var(--info));color:var(--acc,var(--info));border-radius:999px;padding:0 10px;font-size:.85rem;font-weight:600;margin:0 2px}
 
-        /* Schedule */
-        .schedule-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; }
-        .schedule-item { background: rgba(15, 23, 42, 0.6); padding: 16px; border-radius: 12px; border-left: 4px solid var(--primary-color); }
-        .schedule-item:nth-child(2) { border-left-color: #8b5cf6; }
-        .schedule-item:nth-child(3) { border-left-color: #f59e0b; }
-        .schedule-item:nth-child(4) { border-left-color: var(--accent-color); }
-        .date { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; display: block; }
-        .task { font-size: 1.1rem; font-weight: 600; }
+/* Wykresy słupkowe / flow */
+.bar{display:grid;grid-template-columns:150px 1fr 64px;gap:10px;align-items:center;margin:8px 0;font-size:.9rem}
+.track{background:var(--panel2);border-radius:6px}
+.track i{display:block;height:12px;border-radius:6px;background:var(--acc,var(--info))}
+.bar.lo i{opacity:.4}
+.bar b{text-align:right}
+@media(max-width:520px){.bar{grid-template-columns:100px 1fr 56px}}
+.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:620px){.flow{grid-template-columns:1fr}}
+.flow div{background:var(--panel2);border-radius:10px;padding:14px}
+.flow p{font-size:.9rem;color:var(--mu)}
 
-        /* Reminders Panel */
-        .reminder-list { list-style: none; }
-        .reminder-list li {
-            background: rgba(15, 23, 42, 0.5); padding: 12px; border-radius: 8px; margin-bottom: 10px;
-            display: flex; align-items: flex-start; gap: 12px; border: 1px solid var(--border-color);
-        }
-        .reminder-list li.urgent { border-left: 4px solid var(--danger-color); }
-        .reminder-list li.warning { border-left: 4px solid var(--warning-color); }
-        .reminder-list li.info { border-left: 4px solid var(--primary-color); }
+/* Formularze i pola */
+label.lb{display:block;font-weight:600;font-size:.9rem;margin:14px 0 4px}
+textarea,.code,input[type=text],input[type=url],input[type=search]{width:100%;background:#0b0f14;color:var(--tx);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font:inherit;resize:vertical;min-height:80px}
+input[type=text],input[type=url],input[type=search]{min-height:0}
+.code{min-height:0;font-family:ui-monospace,Menlo,monospace;font-size:.8rem}
+textarea:focus,.code:focus,input:focus{outline:none;border-color:var(--info)}
+button.btn{background:var(--info);color:#0b1220;border:0;padding:9px 14px;border-radius:8px;font:inherit;font-weight:600;cursor:pointer}
+button.btn.alt{background:var(--panel2);color:var(--tx);border:1px solid var(--line)}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
 
-        /* Weekends Plan */
-        .weekend-plan { margin-bottom: 16px; }
-        .weekend-title { font-weight: 600; color: var(--accent-color); margin-bottom: 4px; }
-        .weekend-tasks { padding-left: 20px; font-size: 0.95rem; color: #cbd5e1; }
-        .weekend-tasks li { margin-bottom: 4px; }
+/* Baza literatury: master-detail */
+.lit-toolbar{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.lit-toolbar input{flex:1;min-width:180px}
+.lit-form{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:16px}
+.lit-layout{display:grid;grid-template-columns:250px 1fr;gap:16px}
+@media(max-width:760px){.lit-layout{grid-template-columns:1fr}.lit-list{max-height:260px;overflow-y:auto}}
+.lit-list{display:flex;flex-direction:column;gap:8px}
+.lit-item{display:block;width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);border-left:4px solid var(--acc,var(--line));border-radius:8px;padding:10px 12px;cursor:pointer;color:var(--tx);font:inherit;font-weight:600;font-size:.92rem}
+.lit-item:hover{border-color:var(--info)}
+.lit-item.sel{background:color-mix(in srgb,var(--info) 12%,var(--panel2));border-color:var(--info)}
+.lit-item small{display:block;font-weight:400;color:var(--mu);margin-top:3px;font-size:.8rem}
 
-        /* Pipeline Styles */
-        .pipeline-step { margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; }
-        .pipeline-step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .step-header { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .step-number { background: var(--primary-color); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; flex-shrink: 0; }
-        .step-title { font-size: 1.1rem; font-weight: 600; flex-grow: 1; }
-        .step-details { margin-top: 12px; margin-left: 44px; font-size: 0.95rem; color: var(--text-muted); }
-        .sub-steps { margin-top: 8px; list-style-type: none; }
-        .sub-steps li { position: relative; padding-left: 20px; margin-bottom: 6px; }
-        .sub-steps li::before { content: "•"; position: absolute; left: 0; color: var(--primary-color); }
-
-        /* Inputs & Buttons */
-        .notes-area { width: 100%; min-height: 120px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; color: var(--text-main); font-family: inherit; resize: vertical; margin-top: 12px; }
-        .notes-area:focus { outline: none; border-color: var(--primary-color); }
-        
-        button {
-            background: var(--primary-color); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.3s ease;
-        }
-        button:hover { background: #2563eb; }
-        button.alt { background: var(--surface-color); border: 1px solid var(--border-color); }
-        button.alt:hover { background: rgba(255,255,255,0.1); }
-
-        .checkbox-wrapper { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
-        input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent-color); cursor: pointer; }
-        .checked .step-title { text-decoration: line-through; color: var(--text-muted); }
-        .checked .step-number { background: var(--accent-color); }
-        
-        .toast {
-            position: fixed; bottom: 20px; right: 20px; background: var(--accent-color); color: white; padding: 12px 24px; border-radius: 8px; font-weight: bold; opacity: 0; transition: opacity 0.3s; pointer-events: none;
-        }
-        .toast.show { opacity: 1; }
-    </style>
+/* Status i harmonogram */
+.prog{height:10px;background:var(--panel2);border-radius:6px;overflow:hidden;margin:8px 0 4px}
+.prog i{display:block;height:100%;width:0;background:var(--ok);transition:width .3s}
+.sched{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:10px}
+.sched div{background:var(--panel2);border-radius:10px;padding:12px 14px;border-top:3px solid var(--c)}
+.sched b{display:block;font-size:.85rem;color:var(--mu)}
+.rem{list-style:none}
+.rem li{display:flex;gap:12px;padding:12px;margin-bottom:8px;background:var(--panel2);border-radius:10px;border-left:4px solid var(--c)}
+.rem input,.step input{width:18px;height:18px;margin-top:3px;accent-color:var(--ok);flex-shrink:0}
+.rem li.done{opacity:.55}
+.done .st{opacity:.55;text-decoration:line-through}
+.wk{margin-bottom:14px}
+.wk h3{color:var(--ok)}
+.wk ul{padding-left:20px;color:#cbd5e1;font-size:.93rem}
+details.step{border-bottom:1px solid var(--line)}
+details.step:last-child{border-bottom:0}
+details.step summary{display:flex;align-items:center;gap:12px;padding:12px 0;cursor:pointer;list-style:none}
+details.step summary::-webkit-details-marker{display:none}
+.n{background:var(--info);color:#0b1220;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.85rem;flex-shrink:0}
+.done .n{background:var(--ok)}
+.st{flex:1;font-weight:600}
+.chev{color:var(--mu);transition:transform .2s}
+details[open] .chev{transform:rotate(90deg)}
+.sb{padding:0 0 14px 68px;color:var(--mu);font-size:.93rem}
+.sb ul{padding-left:18px;margin:6px 0}
+.sb textarea{min-height:60px;margin-top:6px}
+@media(max-width:520px){.sb{padding-left:0}}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--ok);color:#06251a;padding:11px 20px;border-radius:8px;font-weight:700;opacity:0;pointer-events:none;transition:opacity .3s}
+.toast.show{opacity:1}
+</style>
 </head>
 <body>
-
-    <div class="container">
-        <h1>MGR Dashboard 🚀</h1>
-
-        <!-- Sync Panel -->
-        <div class="card sync-panel">
-            <h3>☁️ Synchronizacja między urządzeniami</h3>
-            <p style="font-size: 0.85rem; color: #cbd5e1;">GitHub Pages nie ma bazy danych. Aby przenieść notatki z komputera na telefon: na komputerze kliknij "Eksportuj" -> skopiuj kod -> wyślij go sobie -> na telefonie wklej go tutaj i kliknij "Importuj".</p>
-            <input type="text" id="sync-code" class="sync-input" placeholder="Tu wklej kod z innego urządzenia..." onclick="this.select()">
-            <div class="sync-btns">
-                <button onclick="exportData()">📤 Eksportuj notatki (Kopiuj kod)</button>
-                <button class="alt" onclick="importData()">📥 Importuj notatki (Wczytaj z kodu)</button>
-            </div>
-        </div>
-
-        <!-- Ważne Informacje i Przypominajki -->
-        <div class="grid-2">
-            <div class="card">
-                <h2>🔔 Przypominajki / Akcje</h2>
-                <ul class="reminder-list">
-                    <li class="urgent">
-                        <input type="checkbox" id="rem-1" onchange="saveCheck('rem-1')">
-                        <div>
-                            <strong>Zgłoszenie tematu przez promotora!</strong><br>
-                            <span style="font-size: 0.85rem; color: #94a3b8;">Temat zatwierdzony, ale systemowo dr Grega musi go zgłosić. Przypomnieć mu o tym na najbliższym spotkaniu/mailowo.</span>
-                        </div>
-                    </li>
-                    <li class="warning">
-                        <input type="checkbox" id="rem-2" onchange="saveCheck('rem-2')">
-                        <div>
-                            <strong>Koreańczycy (Gachon Data)</strong><br>
-                            <span style="font-size: 0.85rem; color: #94a3b8;">Wysłano follow-up z pytaniem o datę dostarczenia. Sprawdzać maila.</span>
-                        </div>
-                    </li>
-                    <li class="info">
-                        <input type="checkbox" id="rem-3" onchange="saveCheck('rem-3')">
-                        <div>
-                            <strong>Możliwy Recenzent</strong><br>
-                            <span style="font-size: 0.85rem; color: #94a3b8;">Dr Leszczuk (samodzielny pracownik). Warto mieć to z tyłu głowy pisząc tekst.</span>
-                        </div>
-                    </li>
-                    <li class="info">
-                        <input type="checkbox" id="rem-4" onchange="saveCheck('rem-4')">
-                        <div>
-                            <strong>Oświadczenie AI</strong><br>
-                            <span style="font-size: 0.85rem; color: #94a3b8;">Pamiętać by w pracy zawrzeć sekcję o wykorzystaniu AI (tylko do kodu i korekty, NIE do pisania twórczego).</span>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Plan na najbliższe weekendy -->
-            <div class="card">
-                <h2>🎯 Plan na najbliższe weekendy</h2>
-                <div class="weekend-plan">
-                    <div class="weekend-title">Weekend 1: Analiza Literatury</div>
-                    <ul class="weekend-tasks">
-                        <li>Przeszukać IEEE / Google Scholar (przez bibliotekę AGH).</li>
-                        <li>Znaleźć artykuł przeglądowy.</li>
-                        <li>Wybrać 3 prace z ostatnich 3-4 lat: spisać jakich danych/metod użyli i wyniki.</li>
-                        <li>Zrobić notatki paragrafowe (co opiszę w rozdziale teoretycznym).</li>
-                    </ul>
-                </div>
-                <div class="weekend-plan">
-                    <div class="weekend-title">Weekend 2: Setup i Dane (PKLot)</div>
-                    <ul class="weekend-tasks">
-                        <li>Stworzyć repozytorium kodu.</li>
-                        <li>Przygotować powtarzalny skrypt (pobieranie/parsowanie XML).</li>
-                        <li>Stworzyć gotowy plik CSV (Timestamp vs Zajętość).</li>
-                    </ul>
-                </div>
-                <div class="weekend-plan">
-                    <div class="weekend-title">Weekend 3: Baseline i Klasyka</div>
-                    <ul class="weekend-tasks">
-                        <li>Opracować Naiwny Baseline (Zajętość teraz = Zajętość za X min).</li>
-                        <li>Skonfigurować prostą ARIMĘ i wyciągnąć pierwsze wyniki (MAE).</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Harmonogram -->
-        <div class="card">
-            <h2>📅 Harmonogram Ostateczny</h2>
-            <div class="schedule-grid">
-                <div class="schedule-item">
-                    <span class="date">28 Lutego</span>
-                    <span class="task">Początek badań</span>
-                </div>
-                <div class="schedule-item">
-                    <span class="date">30 Kwietnia</span>
-                    <span class="task">Koniec eksperymentów</span>
-                </div>
-                <div class="schedule-item">
-                    <span class="date">31 Maja</span>
-                    <span class="task">Gotowy tekst</span>
-                </div>
-                <div class="schedule-item">
-                    <span class="date">30 Czerwca</span>
-                    <span class="task">Gotowa praca</span>
-                    <span class="date" style="margin-top: 5px;">(10 Września ew. obrona)</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Notatki ogólne ze spotkań -->
-        <div class="card">
-            <h2>📝 Notatki / Brudnopis</h2>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Piszesz tu np. opisy 3 wybranych artykułów. Zapisuje się samo.</p>
-            <textarea id="general-notes" class="notes-area" placeholder="Artykuł 1 (Autor, Rok): Użyli modelu X na datasecie Y. Wynik MAE = Z. Wnioski..."></textarea>
-        </div>
-
-        <!-- Baza Literatury -->
-        <div class="card">
-            <h2>📚 Baza Literatury i Dokumenty</h2>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Zapisuj tu najważniejsze znalezione artykuły. (Link, tytuł, główne wnioski)</p>
-            
-            <div style="margin-bottom: 16px;">
-                <label style="font-weight: 600; font-size: 0.9rem; color: var(--accent-color);">📖 Artykuł Przeglądowy (Review):</label>
-                <textarea id="lit-review" class="notes-area" placeholder="Tytuł / Link / Rok: ..." style="min-height: 70px; margin-top: 4px;"></textarea>
-            </div>
-            
-            <div style="margin-bottom: 16px;">
-                <label style="font-weight: 600; font-size: 0.9rem; color: #60a5fa;">📄 Kluczowa publikacja (Metoda / Architektura):</label>
-                <textarea id="lit-main" class="notes-area" placeholder="Tytuł / Link / Rok: ..." style="min-height: 70px; margin-top: 4px;"></textarea>
-            </div>
-
-            <div style="margin-bottom: 16px;">
-                <label style="font-weight: 600; font-size: 0.9rem; color: #8b5cf6;">📄 Ważna publikacja (Dane / PKLot):</label>
-                <textarea id="lit-data" class="notes-area" placeholder="Tytuł / Link / Rok: ..." style="min-height: 70px; margin-top: 4px;"></textarea>
-            </div>
-
-            <div style="margin-bottom: 16px;">
-                <label style="font-weight: 600; font-size: 0.9rem; color: var(--warning-color);">📑 Inne / Linki do dokumentów (Katalog uczelni, wytyczne pracy):</label>
-                <textarea id="lit-other" class="notes-area" placeholder="Link do wytycznych pisania pracy na AGH, dodatkowe linki IEEE..." style="min-height: 90px; margin-top: 4px;"></textarea>
-            </div>
-        </div>
-
-        <!-- Deep Pipeline -->
-        <div class="card">
-            <h2>🧠 Deep Pipeline ML (Krok po kroku)</h2>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
-                Odblokowuj poszczególne kroki od zera do własnego modelu ML.
-            </p>
-            <div id="pipeline-container"></div>
-        </div>
+<div class="wrap">
+  <div class="top">
+    <h1>Panel projektu pracy magisterskiej</h1>
+    <div class="thesis-box">
+      <p class="muted" style="margin-bottom:4px">Temat pracy (PL)</p>
+      <p class="thesis-title">Analiza i porównanie metod służących do predykcji zajętości miejsc parkingowych</p>
+      <p class="muted" style="margin-bottom:4px">Thesis title (EN)</p>
+      <p class="thesis-title-en">Analysis and comparison of methods for predicting parking space occupancy</p>
+      <div class="meta-row">
+        <span><b>Promotor:</b> dr inż. Michał Grega</span>
+        <span><b>Jednostka:</b> Katedra Telekomunikacji</span>
+        <span><b>Kierunek:</b> Teleinformatyka</span>
+        <span><b>Rodzaj:</b> Praca magisterska</span>
+        <span><b>Autor:</b> Kamil Kras</span>
+      </div>
     </div>
+  </div>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div id="panels"></div>
+</div>
+<div id="toast" class="toast" role="status"></div>
 
-    <div id="toast" class="toast">Skopiowano kod do schowka!</div>
+<script>
+/* ===== helpers ===== */
+const $ = s => document.querySelector(s);
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+};
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
 
-    <script>
-        const pipelineSteps = [
-            {
-                id: 'step-0', title: 'Research i Baza Wiedzy', details: 'Fundament pracy magisterskiej.',
-                substeps: ['Znalezienie artykułu przeglądowego.', 'Wybranie 3 głównych publikacji referencyjnych.', 'Przygotowanie notatek z literatury do rozdziału 2.']
-            },
-            {
-                id: 'step-1', title: 'Pozyskanie danych (Data Ingestion)', details: 'Zrozumienie, z czym w ogóle pracujemy.',
-                substeps: ['Pobranie PKLot z Kaggle.', 'Przeanalizowanie struktury folderów.', 'Odkrycie jak czytać pliki XML.']
-            },
-            {
-                id: 'step-2', title: 'Budowa Szeregów Czasowych (Time-Series)', details: 'Modele jedzą liczby w czasie.',
-                substeps: ['Napisanie pętli w Pythonie idącej po XML-ach.', 'Zliczenie % zajętości parkingu.', 'Zapisanie do .csv (Timestamp, Occupancy, Camera_ID).']
-            },
-            {
-                id: 'step-3', title: 'Inżynieria Cech & Preprocessing', details: 'Przygotowanie papki dla sieci neuronowej.',
-                substeps: ['Normalizacja (Min-Max Scaler).', 'Kodowanie czasu (sinus/cosinus doby).', 'Rozdzielenie chronologiczne: 70% Trening, 15% Val, 15% Test.']
-            },
-            {
-                id: 'step-4', title: 'Naiwny Baseline', details: 'Z czym walczymy?',
-                substeps: ['Założenie: "za 15 min = teraz".', 'Obliczenie błędu MAE, RMSE. To jest punkt odniesienia.']
-            },
-            {
-                id: 'step-5', title: 'ARIMA (Klasyczny Benchmark)', details: 'Stara dobra statystyka.',
-                substeps: ['Zbadanie stacjonarności (Dickey-Fuller).', 'Trening modelu ARIMA.', 'Porównanie z Baseline.']
-            },
-            {
-                id: 'step-6', title: 'Data Windowing', details: 'Formatowanie X i Y dla LSTM.',
-                substeps: ['Mechanizm przesuwanego okna (Sliding Window).', 'X: Historia (np. 2h). Y: Przyszłość (15, 30, 60 min).']
-            },
-            {
-                id: 'step-7', title: 'Główne Danie: LSTM', details: 'Budowa i trening głównego modelu.',
-                substeps: ['Architektura w PyTorch/Keras.', 'Pętla treningowa z Early Stopping (POWTARZALNA!).']
-            },
-            {
-                id: 'step-8', title: 'Model Alternatywny: GRU', details: 'Lżejszy brat LSTM.',
-                substeps: ['Zmiana warstw na GRU.', 'Porównanie dokładności i czasu uczenia.']
-            },
-            {
-                id: 'step-9', title: 'Analiza Wyników', details: 'Dowody do pracy magisterskiej.',
-                substeps: ['Ostateczne MAE i RMSE dla 15, 30, 60 min.', 'Wykresy Predykcja vs Prawda.', 'Tabela zbiorcza wszystkich 4 modeli.']
-            },
-            {
-                id: 'step-10', title: 'Boss Końcowy: Generalizacja (Gachon)', details: 'Test na innych danych.',
-                substeps: ['Test modelu (bez douczania) na danych z Korei.', 'Dyskusja w pracy dlaczego wyniki spadły/wzrosły.']
-            }
-        ];
+/* ===== dane: książki (core, nieusuwalne) ===== */
+const bars = (title, rows, note) => `<div class="card"><h3>${title}</h3>${rows.map(r =>
+  `<div class="bar ${r[3]?'lo':''}"><span>${r[0]}</span><div class="track"><i style="width:${r[2]}%"></i></div><b>${r[1]}</b></div>`).join('')}<p class="muted" style="margin-top:8px">${note}</p></div>`;
 
-        const container = document.getElementById('pipeline-container');
+const coreBooks = [
+ { id:'b1', acc:'#2dd4bf', title:'Książka 1: Gachon (optymalizacja sprzętowa)',
+   src:['Real-Time Parking Space Management System Based on a Low-Power Embedded Platform','Kim et al., Sensors 2025','https://www.mdpi.com/1424-8220/25/22/7009'],
+   key:'YOLOv8 włącza się dopiero, gdy zmienią się piksele — procesor odpoczywa.',
+   items:[
+    ['Mechanizm Dual-Trigger:','Model detekcyjny YOLOv8 uaktywnia się dopiero po rejestracji zmiany pikseli, oszczędzając procesor.'],
+    ['Skala:','Pomiary z 7 miesięcy (interwał 3–5 s).'],
+    ['Temporal Smoothing:','Zastosowano wygładzanie w czasie, więc dane są wstępnie oczyszczone z szumów.'],
+    ['Klasyfikacja:','Miejsca podzielono na <span class="chip">Car</span><span class="chip">Empty</span><span class="chip">Disabled</span>']],
+   viz:'' },
+ { id:'b2', acc:'#fbbf24', title:'Książka 2: Zbiór z Walencji i Santander',
+   src:['A Comparative Analysis of Machine/Deep Learning Models for Parking Space Availability Prediction','Awan et al., Sensors 2020','https://www.mdpi.com/1424-8220/20/1/322'],
+   key:'Proste algorytmy biją głębokie sieci: 92% dokładności.',
+   items:[
+    ['Zbiór:','Santander, 25 mln rekordów, horyzont 10 i 20 minut.'],
+    ['Wnioski:','Proste algorytmy (Decision Tree, Random Forest) wygrywają ze skomplikowanymi sieciami głębokimi (MLP), osiągając 92% dokładności.'],
+    ['Sieć MLP:','Zamyka stawkę z zaledwie 70–72% skuteczności.'],
+    ['Skala danych:','Powiększenie zbioru z 3 do 25 mln rekordów nie zmieniło rankingu skuteczności.']],
+   viz: bars('Dokładność modeli',[['Drzewa Decyzyjne','92%',92],['Sieć MLP','70–72%',71,1]],'Wyższy słupek = lepiej. Ranking taki sam dla 3 mln i 25 mln rekordów.') },
+ { id:'b3', acc:'#60a5fa', title:'Książka 3: ARIMA vs LSTM',
+   src:['Parking lot occupancy prediction using long short-term memory and statistical methods','Avşar et al., 2022','https://dergipark.org.tr/en/pub/mjen/article/986631'],
+   key:'Krótki horyzont wygrywa statystyka, dłuższy — pamięć sieci LSTM.',
+   items:[
+    ['Kontekst:','Uliczne miejsca w Adanie (Turcja), predykcja na 1, 5 i 15 minut.'],
+    ['1 minuta w przód:','Dominacja statystycznego modelu ARIMA (RMSE 0.62) nad LSTM (0.98).'],
+    ['5 i 15 minut:','Przewaga sieci LSTM dzięki komórkom pamięci zapamiętującym długoterminowe nieliniowe zależności.']],
+   viz: bars('Horyzont 1 minuta — RMSE',[['ARIMA','0.62',63],['LSTM','0.98',100,1]],'Niższy słupek = lepiej. Dla 5 i 15 minut kolejność się odwraca na korzyść LSTM.') },
+ { id:'b4', acc:'#c4a1ff', title:'Książka 4: Modele hybrydowe (ARIMA-LSTM-BPNN)',
+   src:['Hybrid parking space prediction model: integrating ARIMA, Long short-term memory (LSTM), and backpropagation neural network (BPNN)','Dahiya et al., 2025','https://pmc.ncbi.nlm.nih.gov/articles/PMC11784715/'],
+   key:'Najwyższą dokładność uzyskuje się łącząc statystykę z sieciami.',
+   items:[
+    ['Podział ról:','Najwyższą dokładność uzyskuje się łącząc algorytmy statystyczne z sieciami neuronowymi.'],
+    ['Rola ARIMA:','Algorytm ARIMA jest wykorzystywany do izolowania i prognozowania trendów liniowych.'],
+    ['Rola LSTM:','Równolegle wdrażana do wyłapywania i analizy skomplikowanych załamań i nieliniowych zjawisk.'],
+    ['BPNN:','Dodatkowa sieć służąca do scalenia wyników i maksymalnej redukcji błędu resztkowego.']],
+   viz:`<div class="card"><h3>Podział ról w architekturze hybrydowej</h3><div class="flow">
+     <div><h3>ARIMA</h3><p>Trendy liniowe</p></div>
+     <div><h3>LSTM</h3><p>Zjawiska nieliniowe (równolegle)</p></div>
+     <div><h3>BPNN</h3><p>Korekta błędu resztkowego</p></div></div></div>` },
+ { id:'b5', acc:'#f472b6', title:'Książka 5: Stacked GRU-LSTM',
+   src:['Parking Occupancy Prediction Method Based on Multi Factors and Stacked GRU-LSTM','Zeng, Ma, Wang, Cui — IEEE Access, 2022','https://doi.org/10.1109/ACCESS.2022.3171330'],
+   key:'Warstwowa architektura Stacked GRU-LSTM łączy szybkość obliczeniową GRU z dokładnością LSTM.',
+   items:[
+    ['Podział ról:','Model stackuje GRU i LSTM: GRU odpowiada za szybkość obliczeniową, LSTM za dokładność predykcji.'],
+    ['Dane wejściowe:','Wykorzystano wiele czynników naraz — zajętość, warunki pogodowe i dni świąteczne.'],
+    ['Wynik:','Ważone połączenie obu sieci podnosi stabilność predykcji względem pojedynczych modeli stackowanych (RNN, LSTM-RNN, LSTM-Bi-LSTM).']],
+   viz:'' },
+ { id:'b6', acc:'#fb923c', title:'Książka 6: Wyższość GRU nad LSTM w skali miasta',
+   src:['Improving Parking Availability Information Using Deep Learning Techniques','Arjona, Linares, Casanovas-Garcia, Vázquez — Transportation Research Procedia, 2020','https://doi.org/10.1016/j.trpro.2020.03.113'],
+   key:'Lżejsza architektura GRU osiąga wyższą dokładność niż LSTM w niemal wszystkich testowanych scenariuszach.',
+   items:[
+    ['Kontekst:','Predykcja godzinowej dostępności miejsc parkingowych dla całych sektorów miasta na podstawie agregacji danych z czujników.'],
+    ['Porównanie:','Zestawiono dedykowane architektury LSTM i GRU, a także model statystyczny ARIMA jako punkt odniesienia.'],
+    ['Wynik:','GRU — architektura lżejsza i tańsza obliczeniowo — wygrywa z LSTM stabilnością i dokładnością w większości scenariuszy.']],
+   viz:'' },
+ { id:'b7', acc:'#a3e635', title:'Książka 7: Optymalizacja przez dekompozycję (TSD-GRU)',
+   src:['An integrated approach for the city-scale near real-time parking occupancy prediction (Meta TSD-GRU)','Materiały i dane: repozytorium Mendeley Data','https://data.mendeley.com/datasets/nh2358f5mf/4'],
+   key:'Zamiast surowych danych, sieć GRU trenuje na sygnale wcześniej rozłożonym na trendy i cykle.',
+   items:[
+    ['Mechanizm:','Wstępna dekompozycja szeregu czasowego (Time Series Decomposition), m.in. transformatą Fouriera, rozbija sygnał na osobne cykle i trendy.'],
+    ['Trening:','Sieć GRU trenuje oddzielnie na wyizolowanych składowych zamiast na surowym, zaszumionym sygnale.'],
+    ['Efekt:','Drastyczny spadek błędu predykcji — umożliwia to operatorom parkingów wdrożenie dynamicznego cennika (dynamic pricing).'],
+    ['Uwaga:','Link prowadzi do repozytorium danych i metody na Mendeley, nie do artykułu w czasopiśmie — nie udało się znaleźć osobnej publikacji pod tym tytułem.']],
+   viz:'' },
+ { id:'b8', acc:'#38bdf8', title:'Książka 8: Optymalizacja GRU dla parkingów ulicznych',
+   src:['Enhancing Predictive Models for On-Street Parking Occupancy: Integrating Adaptive GCN and GRU with Household Categories and POI Factors','Zhao i Zhang, Mathematics (MDPI), 2024','https://doi.org/10.3390/math12182823'],
+   key:'Precyzyjne strojenie architektury GRU pozwala wyłapywać krótkie wahania zajętości chaotycznych parkingów ulicznych.',
+   items:[
+    ['Kontekst:','Parkingi uliczne charakteryzują się większą chaotycznością niż zamknięte place — trudniej przewidzieć ich zajętość.'],
+    ['Metoda:','Precyzyjne strojenie wielkości warstw ukrytych i wymiarowości wejściowej sieci GRU, połączone z danymi o POI i zabudowie.'],
+    ['Efekt:','Model wyłapuje krótkoterminowe, kilkuminutowe wahania zajętości przy zminimalizowanym koszcie obliczeniowym.']],
+   viz:'' }
+];
 
-        // Render pipeline
-        pipelineSteps.forEach((step, index) => {
-            const stepDiv = document.createElement('div');
-            stepDiv.className = 'pipeline-step';
-            stepDiv.id = `container-${step.id}`;
+/* ===== dane: status projektu ===== */
+const reminders = [
+ ['rem-1','var(--ok)','Temat zatwierdzony!','Praca magisterska została oficjalnie zgłoszona i klepnięta przez promotora.'],
+ ['rem-2','var(--warn)','Koreańczycy (Gachon Data)','Wysłano follow-up z pytaniem o datę dostarczenia. Sprawdzać maila.'],
+ ['rem-3','var(--info)','Możliwy recenzent','Dr Leszczuk (samodzielny pracownik). Warto mieć to z tyłu głowy pisząc tekst.'],
+ ['rem-4','var(--info)','Oświadczenie AI','Pamiętać o sekcji o wykorzystaniu AI (tylko do kodu i korekty, NIE do pisania twórczego).']
+];
+const weekends = [
+ ['Faza 1: Scope i literatura (inicjacja)',['Przeszukanie baz IEEE / Scholar i selekcja kluczowych publikacji.','Zdefiniowanie miar sukcesu projektu (KPI: np. błąd MAE < 5%).','Analiza ryzyka: wyznaczenie zbioru PKLot jako oficjalnego planu awaryjnego (mitigacja braku danych z Gachon).']],
+ ['Faza 2: Pipeline danych i MVP (realizacja)',['Budowa powtarzalnego procesu ETL (skrypt parsowania danych wejściowych).','Agregacja danych do ustrukturyzowanych szeregów czasowych (CSV).','Opracowanie naiwnego baseline\'u (Minimum Viable Product) do wstępnej ewaluacji złożonych architektur.']],
+ ['Faza 3: Klasyka vs koszty (optymalizacja)',['Implementacja i ewaluacja bazowego modelu statystycznego (ARIMA).','Analiza kosztów: zestawienie czasu uczenia modeli z ich dokładnością (ROI).','Weryfikacja opłacalności wdrażania głębokich sieci neuronowych względem modeli klasycznych.']]
+];
+const schedule = [
+ ['28 lutego','Początek badań','#3b82f6'],['30 kwietnia','Koniec eksperymentów','#8b5cf6'],
+ ['31 maja','Gotowy tekst','#f59e0b'],['30 czerwca','Gotowa praca (10 września ew. obrona)','#10b981']
+];
+const otherLinks = [
+ ['lit-other','Inne dokumenty / linki (katalog uczelni, wytyczne pracy)','Link do wytycznych pisania pracy na AGH, dodatkowe linki IEEE...',90]
+];
+const steps = [
+ ['Research i baza wiedzy','Fundament pracy magisterskiej.',['Znalezienie artykułu przeglądowego.','Wybranie głównych publikacji referencyjnych.','Przygotowanie notatek z literatury do rozdziału 2.']],
+ ['Pozyskanie danych (Data Ingestion)','Zrozumienie, z czym w ogóle pracujemy.',['Pobranie PKLot z Kaggle.','Przeanalizowanie struktury folderów.','Odkrycie, jak czytać pliki XML.']],
+ ['Budowa szeregów czasowych','Modele jedzą liczby w czasie.',['Pętla w Pythonie po plikach XML.','Zliczenie procentowej zajętości parkingu.','Zapis do .csv (Timestamp, Occupancy, Camera_ID).']],
+ ['Inżynieria cech i preprocessing','Przygotowanie danych dla sieci neuronowej.',['Normalizacja (Min-Max Scaler).','Kodowanie czasu (sinus/cosinus doby).','Podział chronologiczny: 70% trening, 15% val, 15% test.']],
+ ['Naiwny baseline','Z czym walczymy?',['Założenie: „za 15 min = teraz”.','Obliczenie MAE i RMSE — punkt odniesienia.']],
+ ['ARIMA (klasyczny benchmark)','Stara dobra statystyka.',['Zbadanie stacjonarności (Dickey-Fuller).','Trening modelu ARIMA.','Porównanie z baseline.']],
+ ['Data Windowing','Formatowanie X i Y dla LSTM.',['Mechanizm przesuwanego okna (Sliding Window).','X: historia (np. 2 h). Y: przyszłość (15, 30, 60 min).']],
+ ['Główne danie: LSTM','Budowa i trening głównego modelu.',['Architektura w PyTorch / Keras.','Pętla treningowa z Early Stopping.']],
+ ['Model alternatywny: GRU','Lżejszy wariant LSTM.',['Zmiana warstw na GRU.','Porównanie dokładności i czasu uczenia.']],
+ ['Analiza wyników','Dowody do pracy magisterskiej.',['Ostateczne MAE i RMSE dla 15, 30, 60 min.','Wykresy predykcja vs prawda.','Tabela zbiorcza wszystkich modeli.']],
+ ['Test generalizacji (Gachon)','Test na innych danych.',['Test modelu na danych z Korei.','Dyskusja, dlaczego wyniki spadły lub wzrosły.']]
+];
+const glossary = [
+ ['ARIMA','Klasyczny, statystyczny algorytm analizy szeregów czasowych. Bezkonkurencyjny przy prognozach na 1 minutę. Wyłapuje trendy liniowe.'],
+ ['LSTM','Zaawansowana sieć rekurencyjna z komórkami pamięci. Zapamiętuje długoterminowe wzorce nieliniowe i wygrywa na horyzontach od 5 do 15 min.'],
+ ['GRU','Lżejsza sieć rekurencyjna niż LSTM, w wielu badaniach osiąga podobną lub lepszą celność przy niższym koszcie obliczeniowym.'],
+ ['Stacked GRU-LSTM','Architektura warstwowa łącząca szybkość GRU z dokładnością LSTM w jednym modelu.'],
+ ['Baseline','Naiwny model bazowy, stanowiący punkt odniesienia do oceny skuteczności zaawansowanych algorytmów uczenia maszynowego.'],
+ ['Overfitting','Przeuczenie na skutek zbyt agresywnej optymalizacji. Model „uczy się na pamięć” danych, tracąc elastyczność na nowych danych.'],
+ ['Temporal Smoothing','Wygładzanie w czasie. Mechanizm filtrowania szumów z surowych danych wizyjnych za pomocą okna czasowego.'],
+ ['Dual-Trigger','Mechanizm optymalizujący zużycie zasobów (Edge Computing). Model detekcyjny aktywuje się tylko po fizycznej zmianie pikseli.'],
+ ['MLP','Wielowarstwowa sieć neuronowa. W badaniach nad parkingami często okazywała się gorsza od prostych drzew decyzyjnych.'],
+ ['BPNN','Sieć neuronowa typu backpropagation, w modelach hybrydowych stosowana do minimalizacji końcowego błędu resztkowego.'],
+ ['MAE / RMSE / MAPE','Podstawowe metryki błędu używane do porównywania precyzji modeli predykcyjnych.']
+];
 
-            let substepsHtml = step.substeps.map(s => `<li>${s}</li>`).join('');
+/* ===== stan: książki dodane ręcznie ===== */
+function loadCustomBooks(){ try{ const raw = store.get('mgr_custom_books'); return raw ? JSON.parse(raw) : []; }catch(e){ return []; } }
+function saveCustomBooks(){ store.set('mgr_custom_books', JSON.stringify(customBooks)); }
+let customBooks = loadCustomBooks();
+let selectedBookId = null;
+function allBooks(){ return [...coreBooks, ...customBooks]; }
 
-            stepDiv.innerHTML = `
-                <div class="step-header">
-                    <input type="checkbox" id="${step.id}" onchange="toggleStep('${step.id}')">
-                    <div class="step-number">${index + 1}</div>
-                    <label class="step-title" for="${step.id}">${step.title}</label>
-                </div>
-                <div class="step-details">
-                    <p><em>${step.details}</em></p>
-                    <ul class="sub-steps">${substepsHtml}</ul>
-                    <textarea id="notes-${step.id}" class="notes-area" placeholder="Notatki do tego kroku..." style="min-height: 60px; margin-top:8px;"></textarea>
-                </div>
-            `;
-            container.appendChild(stepDiv);
-        });
+/* ===== render: sekcje ogólne ===== */
+const noteBox = (id, ph, h) => `<label class="lb" for="${id}">Notatki własne</label><textarea id="${id}" style="min-height:${h||90}px" placeholder="${ph}"></textarea>`;
 
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
-        }
+function litHTML(){
+  return `<section class="panel" id="p-lit" role="tabpanel">
+    <div class="card">
+      <h2>Baza zebranej literatury</h2>
+      <p class="muted" style="margin-bottom:14px">Wybierz pozycję z listy po lewej, żeby zobaczyć szczegóły, link i notatki. Możesz też dopisać własną pozycję wraz z linkiem — nie trzeba edytować kodu.</p>
+      <div class="lit-toolbar">
+        <input type="search" id="lit-search" placeholder="Szukaj w tytułach i treści...">
+        <button class="btn" id="lit-add-btn" type="button">+ Dodaj pozycję</button>
+      </div>
+      <div class="lit-form" id="lit-form" hidden>
+        <label class="lb" for="lf-title">Tytuł publikacji</label>
+        <input type="text" id="lf-title" placeholder="Np. Nowa metoda predykcji zajętości parkingów">
+        <label class="lb" for="lf-source">Autorzy i rok</label>
+        <input type="text" id="lf-source" placeholder="Np. Kowalski et al., 2026">
+        <label class="lb" for="lf-link">Link do publikacji</label>
+        <input type="url" id="lf-link" placeholder="https://...">
+        <label class="lb" for="lf-key">Kluczowy wniosek (jedno zdanie)</label>
+        <textarea id="lf-key" style="min-height:60px" placeholder="Najważniejszy wniosek z tej publikacji..."></textarea>
+        <label class="lb" for="lf-points">Punkty / notatki (każdy w nowej linii)</label>
+        <textarea id="lf-points" style="min-height:90px" placeholder="Punkt pierwszy...&#10;Punkt drugi..."></textarea>
+        <div class="row">
+          <button class="btn" id="lf-submit" type="button">Zapisz pozycję</button>
+          <button class="btn alt" id="lf-cancel" type="button">Anuluj</button>
+        </div>
+      </div>
+      <div class="lit-layout">
+        <div class="lit-list" id="lit-list"></div>
+        <div class="lit-detail" id="lit-detail"></div>
+      </div>
+    </div>
+  </section>`;
+}
 
-        // Local Storage Logic
-        function toggleStep(id) {
-            const isChecked = document.getElementById(id).checked;
-            document.getElementById(`container-${id}`).classList.toggle('checked', isChecked);
-            localStorage.setItem(`mgr_check_${id}`, isChecked);
-        }
+function glossaryHTML(){
+  return `<section class="panel" id="p-glossary" role="tabpanel">
+    <div class="card">
+      <h2>Słowniczek pojęć</h2>
+      <p class="muted" style="margin-bottom:12px">Zestawienie najważniejszych terminów wykorzystywanych w badaniach i architekturze modeli predykcyjnych.</p>
+      <ul class="facts">${glossary.map(g=>`<li><div class="lbl">${g[0]}</div><div>${g[1]}</div></li>`).join('')}</ul>
+    </div>
+  </section>`;
+}
 
-        function saveCheck(id) {
-            localStorage.setItem(`mgr_check_${id}`, document.getElementById(id).checked);
-        }
+function statusHTML(){
+  return `<section class="panel" id="p-status" role="tabpanel" style="--acc:#34d399">
+    <div class="card">
+      <h2>Status projektu</h2>
+      <p class="muted">Postęp prac analitycznych: <b id="prog-txt">0/${steps.length}</b></p>
+      <div class="prog"><i id="prog-bar"></i></div>
+      <h3 style="margin-top:16px">Harmonogram ostateczny</h3>
+      <div class="sched">${schedule.map(s=>`<div style="--c:${s[2]}"><b>${s[0]}</b>${s[1]}</div>`).join('')}</div>
+    </div>
+    <div class="grid" style="margin-bottom:16px">
+      <div class="card"><h2>Przypominajki</h2><ul class="rem">${reminders.map(r=>`<li id="c-${r[0]}" style="--c:${r[1]}">
+        <input type="checkbox" id="${r[0]}" aria-label="${r[2]}"><div><strong>${r[2]}</strong><br><span class="muted">${r[3]}</span></div></li>`).join('')}</ul></div>
+      <div class="card"><h2>Plan na weekendy</h2>${weekends.map(w=>`<div class="wk"><h3>${w[0]}</h3><ul>${w[1].map(t=>`<li>${t}</li>`).join('')}</ul></div>`).join('')}</div>
+    </div>
+    <div class="card"><h2>Etapy projektu i kodowania</h2><p class="muted" style="margin-bottom:8px">Odhaczaj kroki, kliknij tytuł, by rozwinąć szczegóły i notatki.</p><div id="pipeline"></div></div>
+    <div class="card"><h2>Notatki ogólne / brudnopis</h2><p class="muted" style="margin-bottom:8px">Zapisuje się samo.</p><textarea id="general-notes" style="min-height:120px" placeholder="Tu możesz zapisywać luźne przemyślenia, które nie pasują do konkretnej książki..."></textarea></div>
+    <div class="card"><h2>Inne materiały i linki</h2>${otherLinks.map(l=>`<label class="lb" for="${l[0]}">${l[1]}</label><textarea id="${l[0]}" style="min-height:${l[3]}px" placeholder="${l[2]}"></textarea>`).join('')}</div>
+    <details class="card"><summary style="cursor:pointer;font-weight:700">Synchronizacja między urządzeniami</summary>
+      <p class="muted" style="margin:10px 0">Zapis działa tylko lokalnie w Twojej przeglądarce. Na komputerze kliknij „Eksportuj”, wyślij sobie kod, a na telefonie wklej go tutaj i kliknij „Importuj”.</p>
+      <input type="text" id="sync-code" class="code" placeholder="Tu wklej kod z innego urządzenia..." onclick="this.select()">
+      <div class="row"><button class="btn" id="exp" type="button">Eksportuj (kopiuj kod)</button><button class="btn alt" id="imp" type="button">Importuj (wczytaj z kodu)</button></div>
+    </details>
+  </section>`;
+}
 
-        // Auto-save setup
-        function autoSaveSetup(id, prefix) {
-            let timeout;
-            const element = document.getElementById(id);
-            if(!element) return;
-            element.addEventListener('input', () => {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => {
-                    localStorage.setItem(`${prefix}_${id}`, element.value);
-                }, 500);
-            });
-        }
+/* ===== render: całość ===== */
+const tabDefs = [
+  {id:'status', tab:'Status Projektu', acc:'#34d399'},
+  {id:'lit', tab:'Baza Literatury', acc:'#60a5fa'},
+  {id:'glossary', tab:'Słowniczek', acc:'#c4a1ff'}
+];
 
-        // Sync Features
-        function exportData() {
-            const data = {};
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key.startsWith('mgr_')) {
-                    data[key] = localStorage.getItem(key);
-                }
-            }
-            const base64 = btoa(encodeURIComponent(JSON.stringify(data)));
-            const input = document.getElementById('sync-code');
-            input.value = base64;
-            input.select();
-            document.execCommand('copy');
-            showToast('Kod skopiowany! Wyślij go na drugi telefon/komputer.');
-        }
+$('#tabs').innerHTML = tabDefs.map(t=>`<button class="tab" role="tab" id="t-${t.id}" data-id="${t.id}" style="--acc:${t.acc}" aria-selected="false">${t.tab}</button>`).join('');
+$('#panels').innerHTML = statusHTML() + litHTML() + glossaryHTML();
 
-        function importData() {
-            const input = document.getElementById('sync-code').value.trim();
-            if(!input) { alert('Najpierw wklej kod!'); return; }
-            try {
-                const data = JSON.parse(decodeURIComponent(atob(input)));
-                for (const key in data) {
-                    if (key.startsWith('mgr_')) {
-                        localStorage.setItem(key, data[key]);
-                    }
-                }
-                showToast('Notatki wczytane pomyślnie! Odświeżanie...');
-                setTimeout(() => window.location.reload(), 1000);
-            } catch (e) {
-                alert('Błędny kod! Upewnij się, że skopiowałeś całość.');
-            }
-        }
+$('#pipeline').innerHTML = steps.map((s,i)=>`<details class="step" id="c-step-${i}">
+  <summary><input type="checkbox" id="step-${i}" aria-label="${s[0]}"><span class="n">${i+1}</span><span class="st">${s[0]}</span><span class="chev">▸</span></summary>
+  <div class="sb"><em>${s[1]}</em><ul>${s[2].map(x=>`<li>${x}</li>`).join('')}</ul>
+  <textarea id="notes-step-${i}" placeholder="Notatki do tego kroku..."></textarea></div></details>`).join('');
 
-        // Load data on start
-        window.onload = () => {
-            // General & Literature
-            const textAreas = ['general-notes', 'lit-review', 'lit-main', 'lit-data', 'lit-other'];
-            textAreas.forEach(id => {
-                const val = localStorage.getItem(`mgr_text_${id}`);
-                if(val && document.getElementById(id)) {
-                    document.getElementById(id).value = val;
-                }
-                autoSaveSetup(id, 'mgr_text');
-            });
+/* ===== nawigacja zakładek ===== */
+function show(id){
+  if(!tabDefs.some(t=>t.id===id)) id='status';
+  document.querySelectorAll('.tab').forEach(b=>{const on=b.dataset.id===id; b.setAttribute('aria-selected',on); b.tabIndex=on?0:-1;});
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('on',p.id==='p-'+id));
+  try{ history.replaceState(null,'','#'+id); }catch(e){ /* zablokowane w piaskownicy podglądu — bez znaczenia poza nią */ }
+}
+$('#tabs').addEventListener('click',e=>{const b=e.target.closest('.tab'); if(b) show(b.dataset.id);});
 
-            // Reminders
-            ['rem-1', 'rem-2', 'rem-3', 'rem-4'].forEach(id => {
-                if(localStorage.getItem(`mgr_check_${id}`) === 'true') {
-                    document.getElementById(id).checked = true;
-                }
-            });
+/* ===== baza literatury: lista + szczegóły + dodawanie ===== */
+function litFiltered(){
+  const q = ($('#lit-search').value||'').toLowerCase().trim();
+  return allBooks().filter(b=>{
+    if(!q) return true;
+    const hay = (b.title+' '+(b.src? b.src.join(' '):'')+' '+(b.key||'')).toLowerCase();
+    return hay.includes(q);
+  });
+}
+function renderLitList(){
+  const items = litFiltered();
+  if(!allBooks().some(b=>b.id===selectedBookId) && items.length) selectedBookId = items[0].id;
+  $('#lit-list').innerHTML = items.map(b=>`<button type="button" class="lit-item ${b.id===selectedBookId?'sel':''}" data-id="${b.id}" style="--acc:${b.acc||'var(--info)'}">${b.title}<small>${b.src ? b.src[1] : ''}</small></button>`).join('') || '<p class="muted">Brak wyników dla podanej frazy.</p>';
+}
+function renderLitDetail(){
+  const b = allBooks().find(x=>x.id===selectedBookId);
+  if(!b){ $('#lit-detail').innerHTML = '<p class="muted">Brak pozycji do wyświetlenia. Dodaj pierwszą przyciskiem powyżej.</p>'; return; }
+  const isCustom = !!b.custom;
+  const link = b.link || (b.src && b.src[2]) || '';
+  const linkHtml = link ? `<a href="${link}" target="_blank" rel="noopener" class="link-btn">Przejdź do publikacji ↗</a>` : '';
+  const srcTitle = b.src ? b.src[0] : b.title;
+  const srcAuthors = b.src ? b.src[1] : '';
+  let factsHtml = '';
+  if(b.items && b.items.length){
+    factsHtml = `<div class="card"><h3>Najważniejsze punkty</h3><ul class="facts">${b.items.map(i=>`<li><div class="lbl">${i[0]}</div><div>${i[1]}</div></li>`).join('')}</ul></div>`;
+  } else if(b.points && b.points.length){
+    factsHtml = `<div class="card"><h3>Punkty</h3><ul class="facts">${b.points.map(p=>`<li><div>${p}</div></li>`).join('')}</ul></div>`;
+  }
+  $('#lit-detail').innerHTML = `<div style="--acc:${b.acc||'var(--info)'}">
+    <h2 style="margin-bottom:10px">${b.title}</h2>
+    <div class="src"><span class="muted">Źródło</span><strong>${srcTitle}</strong>${srcAuthors?`<em>${srcAuthors}</em>`:''}${linkHtml}</div>
+    ${b.key? `<p class="key">${b.key}</p>` : ''}
+    ${factsHtml}
+    ${b.viz || ''}
+    <div class="card">${noteBox('note-'+b.id,'Co z tego wykorzystam w pracy? Cytaty, pomysły...')}</div>
+    ${isCustom ? `<button class="btn alt" id="del-${b.id}" type="button">Usuń tę pozycję</button>` : ''}
+  </div>`;
+  bindText('note-'+b.id);
+  if(isCustom){
+    $('#del-'+b.id).addEventListener('click',()=>{
+      if(!confirm('Usunąć tę pozycję z listy? Tej operacji nie da się cofnąć.')) return;
+      customBooks = customBooks.filter(x=>x.id!==b.id);
+      saveCustomBooks();
+      selectedBookId = null;
+      renderLitList(); renderLitDetail();
+      toast('Usunięto pozycję.');
+    });
+  }
+}
+$('#lit-list').addEventListener('click', e=>{
+  const btn = e.target.closest('.lit-item'); if(!btn) return;
+  selectedBookId = btn.dataset.id;
+  renderLitList(); renderLitDetail();
+});
+$('#lit-search').addEventListener('input', renderLitList);
+$('#lit-add-btn').addEventListener('click', ()=>{ $('#lit-form').hidden = !$('#lit-form').hidden; });
+$('#lf-cancel').addEventListener('click', ()=>{ $('#lit-form').hidden = true; });
+$('#lf-submit').addEventListener('click', ()=>{
+  const title = $('#lf-title').value.trim();
+  if(!title){ toast('Podaj przynajmniej tytuł publikacji.'); return; }
+  const entry = {
+    id: 'custom-'+Date.now(),
+    title,
+    src: [title, $('#lf-source').value.trim()],
+    link: $('#lf-link').value.trim(),
+    key: $('#lf-key').value.trim(),
+    points: $('#lf-points').value.split('\n').map(s=>s.trim()).filter(Boolean),
+    acc: '#94a3b8',
+    custom: true
+  };
+  customBooks.push(entry);
+  saveCustomBooks();
+  ['#lf-title','#lf-source','#lf-link','#lf-key','#lf-points'].forEach(sel=>{ $(sel).value=''; });
+  $('#lit-form').hidden = true;
+  selectedBookId = entry.id;
+  renderLitList(); renderLitDetail();
+  toast('Dodano nową pozycję do bazy.');
+});
+renderLitList();
+renderLitDetail();
 
-            // Pipeline notes & checkboxes
-            pipelineSteps.forEach(step => {
-                const isChecked = localStorage.getItem(`mgr_check_${step.id}`) === 'true';
-                if(isChecked) {
-                    document.getElementById(step.id).checked = true;
-                    document.getElementById(`container-${step.id}`).classList.add('checked');
-                }
+/* ===== zapis danych ===== */
+function bindText(id){
+  const el=$('#'+id); if(!el) return;
+  const v=store.get('mgr_text_'+id); if(v) el.value=v;
+  let t; el.addEventListener('input',()=>{clearTimeout(t); t=setTimeout(()=>store.set('mgr_text_'+id,el.value),500);});
+}
+function bindCheck(id, wrapId){
+  const el=$('#'+id), wrap=$('#'+wrapId);
+  const apply=()=>{wrap.classList.toggle('done',el.checked); updateProgress();};
+  el.checked = store.get('mgr_check_'+id)==='true';
+  el.addEventListener('change',()=>{store.set('mgr_check_'+id,el.checked); apply();});
+  apply();
+}
+function updateProgress(){
+  const done=steps.filter((_,i)=>$('#step-'+i)&&$('#step-'+i).checked).length;
+  $('#prog-txt').textContent=`${done}/${steps.length}`;
+  $('#prog-bar').style.width=(done/steps.length*100)+'%';
+}
 
-                const noteContent = localStorage.getItem(`mgr_text_notes-${step.id}`);
-                if(noteContent) {
-                    document.getElementById(`notes-${step.id}`).value = noteContent;
-                }
-                
-                autoSaveSetup(`notes-${step.id}`, 'mgr_text');
-            });
-        }
-    </script>
+['general-notes',...otherLinks.map(l=>l[0]),...steps.map((_,i)=>'notes-step-'+i)].forEach(bindText);
+reminders.forEach(r=>bindCheck(r[0],'c-'+r[0]));
+steps.forEach((_,i)=>bindCheck('step-'+i,'c-step-'+i));
+
+// Oznacz przypomnienie 1 (zatwierdzony temat) jako ukończone, jeśli to pierwsze wejście na tę wersję:
+if(store.get('mgr_check_rem-1') === null) {
+    $('#rem-1').checked = true;
+    store.set('mgr_check_rem-1', true);
+    $('#c-rem-1').classList.add('done');
+}
+
+/* ===== synchronizacja ===== */
+$('#exp').addEventListener('click',async()=>{
+  const data={};
+  try{ for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i); if(k.startsWith('mgr_')) data[k]=localStorage.getItem(k);} }catch(e){}
+  const code=btoa(encodeURIComponent(JSON.stringify(data)));
+  const input=$('#sync-code'); input.value=code; input.select();
+  try{ await navigator.clipboard.writeText(code); }catch(e){ document.execCommand('copy'); }
+  toast('Kod skopiowany!');
+});
+$('#imp').addEventListener('click',()=>{
+  const code=$('#sync-code').value.trim();
+  if(!code){ toast('Najpierw wklej kod!'); return; }
+  try{
+    const data=JSON.parse(decodeURIComponent(atob(code)));
+    for(const k in data) if(k.startsWith('mgr_')) store.set(k,data[k]);
+    toast('Wczytano! Odświeżam...'); setTimeout(()=>location.reload(),900);
+  }catch(e){ toast('Błędny kod!'); }
+});
+
+show(location.hash.slice(1)||'status');
+</script>
 </body>
 </html>
