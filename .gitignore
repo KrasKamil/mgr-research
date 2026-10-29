@@ -1,0 +1,13 @@
+# Ignoruj środowisko wirtualne
+venv/
+env/
+.env
+
+# Ignoruj dane i wagi modeli (zbyt duże na GitHuba)
+data/
+models/
+
+# Ignoruj pliki tymczasowe Pythona
+__pycache__/
+*.pyc
+.ipynb_checkpoints/

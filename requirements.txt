@@ -1,0 +1,8 @@
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn
+statsmodels
+jupyter
+torch  # lub tensorflow - zależnie w czym wolisz pisać LSTM/GRU
